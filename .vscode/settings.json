@@ -1,3 +1,15 @@
 {
-  "C_Cpp.clang_format_style": "Google"
+  "C_Cpp.clang_format_style": "Google",
+  "cSpell.words": [
+    "EOOP",
+    "MNIST",
+    "Marcin",
+    "NN's",
+    "Serializable",
+    "Wojnarowski",
+    "interruptible",
+    "perceptron",
+    "structs",
+    "urlcolor"
+  ]
 }

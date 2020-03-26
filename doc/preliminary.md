@@ -49,4 +49,4 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
   - Private fields: snake_case with an underscore at the end
   - All the rest: snake_case
 
-[^1]: Serializable: a c++20 concept describing the constraints given by the `Serializer` class
+[^1]: Serializable: a class that implements the `serialize` and `deserialize` methods

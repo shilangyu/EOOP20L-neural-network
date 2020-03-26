@@ -1,9 +1,9 @@
-#include <fstream>
 #include <iostream>
-#include <streambuf>
 #include <string>
 
 using namespace std;
+
+#pragma once
 
 template <typename T>
 class Serializer {
@@ -19,6 +19,9 @@ class Serializer {
   /// takes a path and serializes the parent into the pointed file.
   /// overwrites all content if the file already exists
   auto to_file(string path) -> void;
+
+  /// prints the serialized object
+  // friend auto operator<<<>(ostream& os, const T& obj) -> ostream&;
 
   /// virtual methods that have to be implemented by parent classes
   /// then the serializer can work properly

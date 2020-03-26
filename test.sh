@@ -1,5 +1,5 @@
 #!/bin/bash
 
-find tests/ -name '*.cpp' | xargs g++ -Wall -Wextra -Werror -pedantic -std=c++2a -o test \
+find tests/ -name '*.cpp' | xargs g++ -Wall -Wextra -Werror -pedantic -std=c++2a -I"./include" -o test \
 	&& ./test \
 	&& rm ./test

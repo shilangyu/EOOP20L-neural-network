@@ -35,14 +35,14 @@ class Matrix : Serializer<Matrix> {
   friend auto operator*(const Matrix& lhs, const double& rhs) -> Matrix;
   friend auto operator/(const Matrix& lhs, const double& rhs) -> Matrix;
   /// indexing
-  auto operator[](size_t idx) const -> const vector<double>&;
+  auto operator[](size_t idx) const -> vector<double>&;
 
   /// transposing flips the x and y axis
   auto transpose() const -> Matrix;
 
   /// overriding the virtual methods of Serializer
   auto serialize() const -> string override;
-  static auto deserialize(const string& str) -> Config;
+  static auto deserialize(const string& str) -> Matrix;
 
  private:
   /// thats where the data is stored. Vector was chosen because while the

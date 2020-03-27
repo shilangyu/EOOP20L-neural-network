@@ -26,7 +26,7 @@ class NeuralNetwork : Serializer<Matrix> {
 
   /// overriding the virtual methods of Serializer
   auto serialize() const -> string override;
-  static auto deserialize(const string& str) -> Config;
+  static auto deserialize(const string& str) -> NeuralNetwork;
 
  private:
   /// weights of the connections

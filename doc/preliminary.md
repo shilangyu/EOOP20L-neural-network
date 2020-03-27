@@ -34,7 +34,9 @@ The main purpose of the `Matrix` class is to simplify matrix operations. It will
 
 #### NNFunctions
 
-`NNFunctions` stores function used by the NN: activation function, derivative of the activation function, output layer function, derivative of the output layer function, and cost function. Constructing a `NNFunction` object consists of providing the previously mentioned function, or choosing ready function from an enum.
+`NNFunctions` stores function used by the NN: activation function, derivative of the activation function, output layer function, derivative of the output layer function, and cost function. Constructing a `NNFunction` object consists of providing the previously mentioned functions, or choosing ready functions from an enum.
+
+`NNFunctions` is `Serializable` only if the chosen functions are from the preset, custom ones can't be serialized.
 
 #### NeuralNetwork
 

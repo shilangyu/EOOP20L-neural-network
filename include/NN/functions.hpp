@@ -1,24 +1,27 @@
 #include <string>
+#include <vector>
+
+#include "NN/serialize.hpp"
 
 using namespace std;
 
 #pragma once
 
-enum class ActivationFunction { sigmoid, relu, tanh };
-
-enum class LastLayerFunction { softmax };
-
-enum class CostFunction { mean_square };
-
-class NNFunctions {
+class NNFunctions : Serializer<NNFunctions> {
  public:
+  /// enums listing available function
+  /// __custom means the function was provided
+  enum Activation { sigmoid, relu, tanh, __custom };
+  enum LastLayer { softmax, __custom };
+  enum Cost { mean_square, __custom };
+
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
   typedef auto (*Activating)(double&) -> double;
   /// a function that takes an array of doubles and maps it to different values
-  typedef auto (*Mapping)(double&) -> double;
+  typedef auto (*Mapping)(vector<double>) -> vector<double>;
   /// a function that takes an array of doubles and reduces it to a single value
-  typedef auto (*Reducing)(double&) -> double;
+  typedef auto (*Reducing)(vector<double>&) -> double;
 
   /// collection of functions
   const Activating activation, d_activation;
@@ -26,8 +29,19 @@ class NNFunctions {
   const Reducing cost;
 
   /// constructor accepting enums describing pre-made functions
-  NNFunctions(ActivationFunction af, LastLayerFunction llf, CostFunction cf);
+  NNFunctions(Activation af, LastLayer llf, Cost cf);
   /// constructor accepting functions
   NNFunctions(const Activating af, const Activating daf, const Mapping llf,
               const Mapping dllf, const Reducing cf);
+
+  /// overriding the virtual methods of Serializer
+  static auto deserialize(string str) -> NNFunctions;
+  auto serialize() -> string override;
+
+ private:
+  /// remembering which functions were chosen, this information is needed for
+  /// serialization
+  Activation af;
+  LastLayer llf;
+  Cost cf;
 };

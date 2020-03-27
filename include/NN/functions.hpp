@@ -17,11 +17,11 @@ class NNFunctions : Serializer<NNFunctions> {
 
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
-  typedef auto (*Activating)(double&) -> double;
+  typedef auto (*Activating)(double) -> double;
   /// a function that takes an array of doubles and maps it to different values
   typedef auto (*Mapping)(vector<double>) -> vector<double>;
   /// a function that takes an array of doubles and reduces it to a single value
-  typedef auto (*Reducing)(vector<double>&) -> double;
+  typedef auto (*Reducing)(const vector<double>&) -> double;
 
   /// collection of functions
   const Activating activation, d_activation;

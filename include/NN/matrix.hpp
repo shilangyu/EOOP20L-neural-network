@@ -19,6 +19,9 @@ class Matrix : Serializer<Matrix> {
   auto randomize(const double min = -1.0, const double max = 1.0) -> void;
 
   /// operator overloads for matrix operations
+  /// if on both sides of the operation theres a matrix then the operation is
+  /// done element wise, unless it is * where a matrix multiplication is
+  /// performed instead
   /// in-place
   auto operator+=(const Matrix& rhs) -> Matrix&;
   auto operator+=(const double& rhs) -> Matrix&;

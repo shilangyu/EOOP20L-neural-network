@@ -19,6 +19,6 @@ class Config : Serializer<Config> {
          const double learning_rate);
 
   /// overriding the virtual methods of Serializer
-  static auto deserialize(string str) -> Config;
-  auto serialize() -> string override;
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> Config;
 };

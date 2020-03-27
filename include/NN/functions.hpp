@@ -11,9 +11,9 @@ class NNFunctions : Serializer<NNFunctions> {
  public:
   /// enums listing available function
   /// __custom means the function was provided
-  enum Activation { sigmoid, relu, tanh, __custom };
-  enum LastLayer { softmax, __custom };
-  enum Cost { mean_square, __custom };
+  enum class Activation { sigmoid, relu, tanh, __custom };
+  enum class LastLayer { softmax, __custom };
+  enum class Cost { mean_square, __custom };
 
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
@@ -35,13 +35,13 @@ class NNFunctions : Serializer<NNFunctions> {
               const Mapping dllf, const Reducing cf);
 
   /// overriding the virtual methods of Serializer
-  static auto deserialize(string str) -> NNFunctions;
-  auto serialize() -> string override;
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> NNFunctions;
 
  private:
   /// remembering which functions were chosen, this information is needed for
   /// serialization
-  Activation af;
-  LastLayer llf;
-  Cost cf;
+  Activation af_;
+  LastLayer llf_;
+  Cost cf_;
 };

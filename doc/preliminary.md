@@ -50,5 +50,6 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
   - Type aliases, classes, structs, enums, concepts: PascalCase
   - Private fields: snake_case with an underscore at the end
   - All the rest: snake_case
+- Return types will be annotated with the `auto <name>() -> <type>` syntax
 
 [^1]: Serializable: a class that implements the `serialize` and `deserialize` methods

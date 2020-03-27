@@ -45,7 +45,7 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
 ---
 
 - The code will be formatted using `clang-format` with the `Google` preset
-- Compiled with `g++` version 10 with the `-std=c++2a` flag
+- Compiled with `g++` version 9.2 with the `-std=c++2a` flag
 - Naming convention:
   - Type aliases, classes, structs, enums, concepts: PascalCase
   - Private fields: snake_case with an underscore at the end

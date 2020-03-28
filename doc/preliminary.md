@@ -46,7 +46,7 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
 
 ## 3. Class declarations
 
-The lack of raw pointers is not a coincidence, it was a conscious decision. They are a source of bugs and if a need for pointers will arise, smart pointers will be used instead. Because all properties are auto-cleaned/copied no destructors or copy constructors are present.
+The lack of raw pointers is a conscious decision. They are a source of bugs and if a need for pointers will arise, smart pointers will be used instead. Because all properties are auto-cleaned/copied no destructors or copy constructors are present.
 
 ### Serializer
 
@@ -241,6 +241,139 @@ class NeuralNetwork : Serializer<Matrix> {
 ```
 
 ## 4. Demos
+
+Objects are easily saveable
+
+```cpp
+Matrix m(10, 12);
+m.save_to("/path/to/file");
+```
+
+Not all of them though
+
+```cpp
+NNFunctions f(NNFunctions::Activation::relu, NNFunctions::LastLayer::__custom,
+              NNFunctions::Cost::mean_square);
+
+m.serialize(); // throws an exception, a custom function was used    ^^^^^^^^
+```
+
+Matrices can be multiplied only if the sizes align
+
+```cpp
+Matrix m1(1, 2);
+Matrix m2(2, 2);
+Matrix m3(3, 2);
+
+m1 * m2; // ok
+m1 * m3; // error!
+```
+
+They can be also scaled/moved by scalars
+
+```cpp
+Matrix m(10, 10);
+
+m += 1;
+m -= 2;
+m *= 3;
+m /= 4;
+```
+
+Or added element wise
+
+```cpp
+Matrix m1(2, 2);
+Matrix m2(2, 2);
+Matrix m3(3, 2);
+
+m1 += m2;
+m1 -= m2;
+m1 += m3; // error, sizes do not align
+```
+
+Elements can be accessed (for reading and writing) with the index operator
+
+```cpp
+Matrix m(3, 2);
+
+m[1][0] = 1.2;
+
+Matrix m2 = m.transpose();
+
+assert(m2[0][1] == 1.2); // ok
+```
+
+The neural network provides a very high level API, only `guess` and `train` methods are available
+
+```cpp
+// XOR example
+auto nn = NeuralNetwork::from_file("./backup");
+
+vector<Matrix> inputs;
+vector<Matrix> expected;
+
+// false false -> false
+{
+  Matrix i(2, 1);
+  i[0][0] = 0.0;
+  i[1][0] = 0.0;
+  inputs.push_back(i);
+
+  Matrix e(2, 1);
+  e[0][0] = 1.0;
+  e[1][0] = 0.0;
+  expected.push_back(e);
+}
+
+// false true -> true
+{
+  Matrix i(2, 1);
+  i[0][0] = 0.0;
+  i[1][0] = 1.0;
+  inputs.push_back(i);
+
+  Matrix e(2, 1);
+  e[0][0] = 0.0;
+  e[1][0] = 1.0;
+  expected.push_back(e);
+}
+
+// true false -> true
+{
+  Matrix i(2, 1);
+  i[0][0] = 2.0;
+  i[1][0] = 0.0;
+  inputs.push_back(i);
+
+  Matrix e(2, 1);
+  e[0][0] = 0.0;
+  e[1][0] = 1.0;
+  expected.push_back(e);
+}
+
+// true true -> false
+{
+  Matrix i(2, 1);
+  i[0][0] = 1.0;
+  i[1][0] = 1.0;
+  inputs.push_back(i);
+
+  Matrix e(2, 1);
+  e[0][0] = 1.0;
+  e[1][0] = 0.0;
+  expected.push_back(e);
+}
+
+nn.train(inputs, expected, 1000);
+
+assert(nn.guess(inputs[0]) == 0);
+assert(nn.guess(inputs[1]) == 1);
+assert(nn.guess(inputs[2]) == 1);
+assert(nn.guess(inputs[3]) == 0);
+```
+
+There are unit tests for every method. They can be found [on GitHub](https://github.com/shilangyu/EOOP20L-neural-network/tree/master/test).
 
 ---
 

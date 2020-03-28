@@ -377,12 +377,12 @@ There are unit tests for every method. They can be found [on GitHub](https://git
 
 ---
 
-- The code will be formatted using `clang-format` with the `Google` preset
+- The code is formatted using `clang-format` with the `Google` preset
 - Compiled with `g++` version 9.2 with the `-std=c++2a` flag
 - Naming convention:
   - Type aliases, classes, structs, enums, concepts: PascalCase
   - Private fields: snake_case with an underscore at the end
-  - All the rest: snake_case
+  - All of the rest: snake_case
 - Return types will be annotated with the `auto <name>() -> <type>` syntax
 - Project is hosted [on GitHub](https://github.com/shilangyu/EOOP20L-neural-network)
 

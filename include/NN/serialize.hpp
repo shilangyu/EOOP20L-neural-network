@@ -26,6 +26,7 @@ class Serializer {
   /// virtual methods that have to be implemented by parent classes
   /// then the serializer can work properly
   virtual auto serialize() const -> string = 0;
-  /// this is impossible in c++, therefor it only serves as a documentation
+  /// this is impossible in c++, therefore it only serves purely as
+  /// documentation
   // virtual static auto deserialize(const string& str) -> T = 0;
 };

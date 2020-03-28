@@ -50,6 +50,6 @@ class Matrix : Serializer<Matrix> {
  private:
   /// thats where the data is stored. Vector was chosen because while the
   /// size is immutable and array would seem like a more fitting choice, vector
-  /// provides a much safer interface with almost no overhead
+  /// provides a much safer interface with negligible overhead
   vector<vector<double>> data_;
 };

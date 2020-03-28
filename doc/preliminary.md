@@ -42,6 +42,206 @@ The main purpose of the `Matrix` class is to simplify matrix operations. It will
 
 This is the _brain_ class. Uses all of the classes above to construct a friendly interface for training and performing guesses.
 
+## 2. Memory map
+
+## 3. Class declarations
+
+The lack of raw pointers is not a coincidence, it was a conscious decision. They are a source of bugs and if a need for pointers will arise, smart pointers will be used instead. Because all properties are auto-cleaned/copied no destructors or copy constructors are present.
+
+### Serializer
+
+```cpp
+template <typename T>
+class Serializer {
+ protected:
+  /// protected on purpose, Serializer is an abstract class
+  Serializer();
+
+ public:
+  /// deserializes a file into the parent object.
+  /// throws if file does not exist
+  static auto from_file(const string& path) -> T;
+
+  /// takes a path and serializes the parent into the pointed file.
+  /// overwrites all content if the file already exists
+  auto to_file(const string& path) const -> void;
+
+  /// prints the serialized object
+  // friend auto operator<<<>(ostream& os, const T& obj) -> ostream&;
+
+  /// virtual methods that have to be implemented by parent classes
+  /// then the serializer can work properly
+  virtual auto serialize() const -> string = 0;
+  /// this is impossible in c++, therefore it only serves purely as
+  /// documentation
+  // virtual static auto deserialize(const string& str) -> T = 0;
+};
+```
+
+### Config
+
+```cpp
+class Config : Serializer<Config> {
+ public:
+  /// properties of a neural network
+  /// because they are constant, there is no need encapsulating them
+  const unsigned int inputs, outputs, layers, hidden_neurons;
+  const double learning_rate;
+
+  /// constructor accepting all 4 parameters
+  Config(const unsigned int inputs, const unsigned int outputs,
+         const unsigned int layers, const unsigned int hidden_neurons,
+         const double learning_rate);
+
+  /// overriding the virtual methods of Serializer
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> Config;
+};
+```
+
+### Matrix
+
+```cpp
+class Matrix : Serializer<Matrix> {
+ public:
+  /// size of the matrix
+  const unsigned int rows, columns;
+
+  /// constructor takes the dimensions of the matrix
+  Matrix(const unsigned int rows, const unsigned int columns);
+
+  /// randomizes the matrix with a given range
+  auto randomize(const double min = -1.0, const double max = 1.0) -> void;
+
+  /// operator overloads for matrix operations
+  /// if on both sides of the operation theres a matrix then the operation is
+  /// done element wise, unless it is * where a matrix multiplication is
+  /// performed instead
+  /// in-place
+  auto operator+=(const Matrix& rhs) -> Matrix&;
+  auto operator+=(const double& rhs) -> Matrix&;
+  auto operator-=(const Matrix& rhs) -> Matrix&;
+  auto operator-=(const double& rhs) -> Matrix&;
+  auto operator*=(const double& rhs) -> Matrix&;
+  auto operator/=(const double& rhs) -> Matrix&;
+  /// global
+  friend auto operator+(const Matrix& lhs, const Matrix& rhs) -> Matrix;
+  friend auto operator+(const Matrix& lhs, const double& rhs) -> Matrix;
+  friend auto operator-(const Matrix& lhs, const Matrix& rhs) -> Matrix;
+  friend auto operator-(const Matrix& lhs, const double& rhs) -> Matrix;
+  friend auto operator*(const Matrix& lhs, const Matrix& rhs) -> Matrix;
+  friend auto operator*(const Matrix& lhs, const double& rhs) -> Matrix;
+  friend auto operator/(const Matrix& lhs, const double& rhs) -> Matrix;
+  /// indexing
+  auto operator[](size_t idx) const -> vector<double>&;
+
+  /// transposing flips the x and y axis
+  auto transpose() const -> Matrix;
+
+  /// overriding the virtual methods of Serializer
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> Matrix;
+
+ private:
+  /// thats where the data is stored. Vector was chosen because while the
+  /// size is immutable and array would seem like a more fitting choice, vector
+  /// provides a much safer interface with negligible overhead
+  vector<vector<double>> data_;
+};
+```
+
+### NNFunctions
+
+```cpp
+class NNFunctions : Serializer<NNFunctions> {
+ public:
+  /// enums listing available function
+  /// __custom means the function was provided
+  enum class Activation { sigmoid, relu, tanh, __custom };
+  enum class LastLayer { softmax, __custom };
+  enum class Cost { mean_square, __custom };
+
+  /// type definitions of the functions
+  /// a function that takes a double and decides if its active
+  typedef auto (*Activating)(double) -> double;
+  /// a function that takes an array of doubles and maps it to different values
+  typedef auto (*Mapping)(vector<double>) -> vector<double>;
+  /// a function that takes an array of doubles and reduces it to a single value
+  typedef auto (*Reducing)(const vector<double>&) -> double;
+
+  /// collection of functions
+  const Activating activation, d_activation;
+  const Mapping last_layer, d_last_layer;
+  const Reducing cost;
+
+  /// constructor accepting enums describing pre-made functions
+  NNFunctions(Activation af, LastLayer llf, Cost cf);
+  /// constructor accepting functions
+  NNFunctions(const Activating af, const Activating daf, const Mapping llf,
+              const Mapping dllf, const Reducing cf);
+
+  /// overriding the virtual methods of Serializer
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> NNFunctions;
+
+ private:
+  /// remembering which functions were chosen, this information is needed for
+  /// serialization
+  Activation af_;
+  LastLayer llf_;
+  Cost cf_;
+};
+```
+
+### NeuralNetwork
+
+```cpp
+class NeuralNetwork : Serializer<Matrix> {
+ public:
+  /// constructor takes the previously defined configuration
+  NeuralNetwork(Config config, NNFunctions funcs);
+
+  /// performs a classification guess, it is not meant for regression problems
+  auto guess(const Matrix& inputs) const -> unsigned int;
+
+  /// trains the network `n` amount of times using online training
+  /// inputs and expected have to me linearly aligned: first element of inputs
+  /// have to correspond to first element from expected and so on
+  auto train(const vector<Matrix>& inputs, const vector<Matrix>& expected,
+             unsigned int n) -> void;
+
+  /// overriding the virtual methods of Serializer
+  auto serialize() const -> string override;
+  static auto deserialize(const string& str) -> NeuralNetwork;
+
+ private:
+  /// weights of the connections
+  Matrix input_w_;
+  vector<Matrix> hidden_w_;
+  Matrix output_w_;
+
+  /// biases of the neurons
+  Matrix input_b_;
+  Matrix hidden_b_;
+  Matrix output_b_;
+
+  /// functions
+  NNFunctions funcs_;
+
+  /// config
+  Config config_;
+
+  /// sends inputs through the whole network and returns the output layer
+  auto feedforward(const Matrix& inputs) const -> Matrix;
+
+  /// backpropagates the expected output from some input, adjusts the weights,
+  /// then returns the cost of the network
+  auto backpropagate(const Matrix& inputs, const Matrix& expected) -> double;
+};
+```
+
+## 4. Demos
+
 ---
 
 - The code will be formatted using `clang-format` with the `Google` preset
@@ -51,5 +251,6 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
   - Private fields: snake_case with an underscore at the end
   - All the rest: snake_case
 - Return types will be annotated with the `auto <name>() -> <type>` syntax
+- Project is hosted [on GitHub](https://github.com/shilangyu/EOOP20L-neural-network)
 
 [^1]: Serializable: a class that implements the `serialize` and `deserialize` methods

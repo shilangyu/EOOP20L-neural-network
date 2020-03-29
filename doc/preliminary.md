@@ -7,7 +7,7 @@ urlcolor: cyan
 monofont: JetBrains Mono # make sure to generate with --pdf-engine=xelatex for the font to work
 ---
 
-_Disclaimer_: This document is not meant to be an explanation of the whats and hows of a Neural Network. It will strictly focus on the interface and implementation.
+_Disclaimer_: This document is not meant to be an explanation of the inner workings of a Neural Network. It will strictly focus on the interface and implementation.
 
 ## 1. Description
 
@@ -21,7 +21,7 @@ As a Proof of Concept I will train a NN to solve the [XOR](https://medium.com/@j
 
 This class only exists as a base of a different one; it is an abstract class. It requires that deriving classes have implemented a serialize method and a static deserialize method. Then, the `Serializer` is able to provide such methods as `from_file` or `to_file`, allowing for easy serialization handling no matter who is the parent class.
 
-This class will prove to be very useful when saving the NN's weights to a file and then loading them back in whenever needed. This allows for an interruptible training cycle. Another thing is the ability to configure a NN from a text file rather than fiddling with the code.
+This class will prove to be very useful when saving the NN's weights to a file and then loading them back in whenever needed. This allows for an interruptible training cycle. Additionally it unlocks the ability of configuring the NN from a text file rather than fiddling with code.
 
 #### Config
 

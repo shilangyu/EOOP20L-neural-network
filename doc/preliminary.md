@@ -3,7 +3,8 @@ title: EOOP 20L Preliminary project - Neural Network
 author:
   - Marcin Wojnarowski (303880)
 published: true
-urlcolor: "cyan"
+urlcolor: cyan
+monofont: JetBrains Mono # make sure to generate with --pdf-engine=xelatex for the font to work
 ---
 
 _Disclaimer_: This document is not meant to be an explanation of the whats and hows of a Neural Network. It will strictly focus on the interface and implementation.

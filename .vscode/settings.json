@@ -14,12 +14,14 @@
     "feedforward",
     "funcs",
     "interruptible",
+    "monofont",
     "ostream",
     "perceptron",
     "relu",
     "softmax",
     "structs",
-    "urlcolor"
+    "urlcolor",
+    "xelatex"
   ],
   "cSpell.enableFiletypes": [
     "!asciidoc",

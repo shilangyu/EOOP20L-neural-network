@@ -44,6 +44,12 @@ This is the _brain_ class. Uses all of the classes above to construct a friendly
 
 ## 2. Memory map
 
+The neural network owns all of its data (except pointers to functions which have static lifetimes).
+
+Dotted lines indicate that the data has a structure of the connected type (they don't all point to the same `Matrix` instance).
+
+![memory map](./memory_map.svg)\
+
 ## 3. Class declarations
 
 The lack of raw pointers is a conscious decision. They are a source of bugs and if a need for pointers will arise, smart pointers will be used instead. Because all properties are auto-cleaned/copied no destructors or copy constructors are present.

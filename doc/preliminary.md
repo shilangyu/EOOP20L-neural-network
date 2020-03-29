@@ -11,7 +11,7 @@ _Disclaimer_: This document is not meant to be an explanation of the whats and h
 
 ## 1. Description
 
-This project will focus on implementing a basic multilayer perceptron (known as a ANN: Artificial Neural Network) stripped of all of the more advanced concepts like normalizing weights, mini-batch training, or vectorized computation. The implementation will consist of 5 classes in total, each handling a separate part of what a Neural Network forms.
+This project will focus on implementing a basic multilayer perceptron (known as an ANN: Artificial Neural Network) stripped of all of the more advanced concepts like normalizing weights, mini-batch training, or vectorized computation. The implementation will consist of 5 classes in total, each handling a separate part of what a Neural Network forms.
 
 As a Proof of Concept I will train a NN to solve the [XOR](https://medium.com/@jayeshbahire/the-xor-problem-in-neural-networks-50006411840b) problem: it is known as a simple non-linear problem that requires at least one hidden layer in order to be solved, thus solving it proves that a given NN is able to solve other arbitrary non-linear problems. More or less effectively, but still. If time allows, the NN will be also put against the [MNIST database](https://en.wikipedia.org/wiki/MNIST_database).
 

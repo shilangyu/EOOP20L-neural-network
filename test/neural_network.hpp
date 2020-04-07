@@ -23,7 +23,9 @@ auto get() -> NeuralNetwork {
 }
 }  // namespace
 
-auto constructor() -> void { get(); }
+auto constructor() -> void {
+  get();
+}
 
 auto guess() -> void {
   NeuralNetwork nn = get();
@@ -64,7 +66,9 @@ auto serialize() -> void {
           ""));
 }
 
-auto deserialize() -> void { assert(false && "test not created"); }
+auto deserialize() -> void {
+  assert(false && "test not created");
+}
 
 auto init() -> void {
   cout << "[neural network]" << endl;

@@ -31,8 +31,11 @@ class NNFunctions : Serializer<NNFunctions> {
   /// constructor accepting enums describing pre-made functions
   NNFunctions(Activation af, LastLayer llf, Cost cf);
   /// constructor accepting functions
-  NNFunctions(const Activating af, const Activating daf, const Mapping llf,
-              const Mapping dllf, const Reducing cf);
+  NNFunctions(const Activating af,
+              const Activating daf,
+              const Mapping llf,
+              const Mapping dllf,
+              const Reducing cf);
 
   /// overriding the virtual methods of Serializer
   auto serialize() const -> string override;

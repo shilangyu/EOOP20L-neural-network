@@ -22,7 +22,8 @@ class NeuralNetwork : Serializer<Matrix> {
   /// trains the network `n` amount of times using online training
   /// inputs and expected have to me linearly aligned: first element of inputs
   /// have to correspond to first element from expected and so on
-  auto train(const vector<Matrix>& inputs, const vector<Matrix>& expected,
+  auto train(const vector<Matrix>& inputs,
+             const vector<Matrix>& expected,
              unsigned int n) -> void;
 
   /// overriding the virtual methods of Serializer

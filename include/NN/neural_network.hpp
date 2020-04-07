@@ -15,8 +15,9 @@ class NeuralNetwork : Serializer<Matrix> {
   /// constructor takes the previously defined configuration
   NeuralNetwork(Config config, NNFunctions funcs);
 
-  /// performs a classification guess, it is not meant for regression problems
-  auto guess(const Matrix& inputs) const -> unsigned int;
+  /// performs classification computation
+  /// it is not meant for regression problems
+  auto classify(const Matrix& inputs) const -> unsigned int;
 
   /// trains the network `n` amount of times using online training
   /// inputs and expected have to me linearly aligned: first element of inputs

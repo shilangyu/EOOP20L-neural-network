@@ -30,7 +30,7 @@ auto guess() -> void {
   Matrix inputs(3, 1);
   inputs.randomize();
 
-  nn.guess(inputs);
+  nn.classify(inputs);
 }
 
 auto train() -> void {

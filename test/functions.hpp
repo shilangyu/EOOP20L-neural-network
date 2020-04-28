@@ -20,8 +20,9 @@ auto constructors() -> void {
   NNFunctions ff(
       [](double v) { return v; }, [](double v) { return v; },
       [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v) {
-        v.capacity();  /// done to avoid the 'unused variable' warning
+      [](const vector<double>& v1, const vector<double>& v2) {
+        v1.capacity();  /// done to avoid the 'unused variable' warning
+        v2.capacity();  /// done to avoid the 'unused variable' warning
         return 1.0;
       });
 
@@ -41,8 +42,9 @@ auto serialize() -> void {
   NNFunctions ff(
       [](double v) { return v; }, [](double v) { return v; },
       [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v) {
-        v.capacity();  /// done to avoid the 'unused variable' warning
+      [](const vector<double>& v1, const vector<double>& v2) {
+        v1.capacity();  /// done to avoid the 'unused variable' warning
+        v2.capacity();  /// done to avoid the 'unused variable' warning
         return 1.0;
       });
 
@@ -50,7 +52,7 @@ auto serialize() -> void {
 }
 
 auto deserialize() -> void {
-  auto f = NNFunctions::deserialize("Activation=2;LastLayer=1;Cost=1");
+  auto f = NNFunctions::deserialize("Activation=2;LastLayer=0;Cost=0");
 
   assert(f.activation != NULL);
   assert(f.d_activation != NULL);
@@ -63,8 +65,9 @@ auto calling() -> void {
   NNFunctions ff(
       [](double v) { return v + 1.0; }, [](double v) { return v + 2.0; },
       [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v) {
-        v.capacity();  /// done to avoid the 'unused variable' warning
+      [](const vector<double>& v1, const vector<double>& v2) {
+        v1.capacity();  /// done to avoid the 'unused variable' warning
+        v2.capacity();  /// done to avoid the 'unused variable' warning
         return 3.2;
       });
 
@@ -73,7 +76,7 @@ auto calling() -> void {
   vector<double> v = {1.0, 2.0};
   assert(ff.last_layer(v).size() == 2);
   assert(ff.d_last_layer(v).size() == 2);
-  assert(ff.cost(v) == 3.2);
+  assert(ff.cost(v, v) == 3.2);
 }
 
 auto init() -> void {

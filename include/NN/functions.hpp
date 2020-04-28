@@ -1,3 +1,4 @@
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -17,16 +18,18 @@ class NNFunctions : public Serializer<NNFunctions> {
 
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
-  typedef auto (*Activating)(double) -> double;
+  typedef function<auto(double)->double> Activating;
   /// a function that takes an array of doubles and maps it to different values
-  typedef auto (*Mapping)(vector<double>) -> vector<double>;
-  /// a function that takes an array of doubles and reduces it to a single value
-  typedef auto (*Reducing)(const vector<double>&) -> double;
+  typedef function<auto(vector<double>)->vector<double>> Mapping;
+  /// a function that takes two arrays of doubles and reduces it to a single
+  /// value
+  typedef function<auto(const vector<double>&, const vector<double>&)->double>
+      Reducing;
 
   /// collection of functions
-  const Activating activation, d_activation;
-  const Mapping last_layer, d_last_layer;
-  const Reducing cost;
+  Activating activation, d_activation;
+  Mapping last_layer, d_last_layer;
+  Reducing cost;
 
   /// constructor accepting enums describing pre-made functions
   NNFunctions(Activation af, LastLayer llf, Cost cf);

@@ -22,7 +22,7 @@ auto serialize() -> void {
   string serialized = c.serialize();
 
   assert(serialized ==
-         "inputs=1;outputs=2;layers=3;hidden_neurons=4;learning_rate=0.5");
+         "inputs=1;outputs=2;layers=3;hidden_neurons=4;learning_rate=0.500000");
 }
 
 auto deserialize() -> void {

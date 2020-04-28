@@ -19,11 +19,11 @@ Config::Config(const unsigned int inputs,
 
 auto Config::serialize() const -> string {
   string serialized;
-  serialized += to_string(inputs) + ',';
-  serialized += to_string(outputs) + ',';
-  serialized += to_string(layers) + ',';
-  serialized += to_string(hidden_neurons) + ',';
-  serialized += to_string(learning_rate);
+  serialized += "inputs=" + to_string(inputs) + ';';
+  serialized += "outputs=" + to_string(outputs) + ';';
+  serialized += "layers=" + to_string(layers) + ';';
+  serialized += "hidden_neurons=" + to_string(hidden_neurons) + ';';
+  serialized += "learning_rate=" + to_string(learning_rate);
 
   return serialized;
 }
@@ -31,8 +31,9 @@ auto Config::deserialize(const string& str) -> Config {
   unsigned int inputs, outputs, layers, hidden_neurons;
   double learning_rate;
 
-  sscanf(str.c_str(), "%u,%u,%u,%u,%lf", &inputs, &outputs, &layers,
-         &hidden_neurons, &learning_rate);
+  sscanf(str.c_str(),
+         "inputs=%u;outputs=%u;layers=%u;hidden_neurons=%u;learning_rate=%lf",
+         &inputs, &outputs, &layers, &hidden_neurons, &learning_rate);
 
   return Config{inputs, outputs, layers, hidden_neurons, learning_rate};
 }

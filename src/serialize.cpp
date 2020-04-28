@@ -5,6 +5,17 @@
 
 #include "NN/serialize.hpp"
 
+// sadly generics in cpp have a weird compilation process,
+// I have to explicitely declare them
+#include "NN/config.hpp"
+// #include "NN/functions.hpp"
+// #include "NN/matrix.hpp"
+// #include "NN/neural_network.hpp"
+template class Serializer<Config>;
+// template class Serializer<Matrix>;
+// template class Serializer<NeuralNetwork>;
+// template class Serializer<NNFunctions>;
+
 using namespace std;
 
 template <typename T>

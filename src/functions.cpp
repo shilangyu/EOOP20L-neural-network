@@ -85,12 +85,9 @@ NNFunctions::NNFunctions(const Activating af,
       cf_(Cost::__custom) {}
 
 auto NNFunctions::serialize() const -> string {
-  string serialized;
-  serialized += "Activation=" + to_string(static_cast<int>(af_)) + ';';
-  serialized += "LastLayer=" + to_string(static_cast<int>(llf_)) + ';';
-  serialized += "Cost=" + to_string(static_cast<int>(cf_));
-
-  return serialized;
+  return "Activation=" + to_string(static_cast<int>(af_)) + ';' +
+         "LastLayer=" + to_string(static_cast<int>(llf_)) + ';' +
+         "Cost=" + to_string(static_cast<int>(cf_));
 }
 
 auto NNFunctions::deserialize(const string& str) -> NNFunctions {

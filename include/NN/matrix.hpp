@@ -7,7 +7,7 @@ using namespace std;
 
 #pragma once
 
-class Matrix : Serializer<Matrix> {
+class Matrix : public Serializer<Matrix> {
  public:
   /// size of the matrix
   const unsigned int rows, columns;

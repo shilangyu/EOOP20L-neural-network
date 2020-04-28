@@ -6,7 +6,7 @@ using namespace std;
 
 #pragma once
 
-class Config : Serializer<Config> {
+class Config : public Serializer<Config> {
  public:
   /// properties of a neural network
   /// because they are constant, there is no need encapsulating them

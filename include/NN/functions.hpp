@@ -7,7 +7,7 @@ using namespace std;
 
 #pragma once
 
-class NNFunctions : Serializer<NNFunctions> {
+class NNFunctions : public Serializer<NNFunctions> {
  public:
   /// enums listing available function
   /// __custom means the function was provided

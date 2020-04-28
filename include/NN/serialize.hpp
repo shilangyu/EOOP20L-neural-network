@@ -9,7 +9,7 @@ template <typename T>
 class Serializer {
  protected:
   /// protected on purpose, Serializer is an abstract class
-  Serializer();
+  Serializer() = default;
 
  public:
   /// deserializes a file into the parent object.

@@ -10,7 +10,7 @@ using namespace std;
 
 #pragma once
 
-class NeuralNetwork : Serializer<Matrix> {
+class NeuralNetwork : public Serializer<Matrix> {
  public:
   /// constructor takes the previously defined configuration
   NeuralNetwork(Config config, NNFunctions funcs);

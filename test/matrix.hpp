@@ -239,7 +239,7 @@ auto transpose() -> void {
   assert(m2[0][1] == 3.0);
   assert(m2[0][2] == 5.0);
   assert(m2[1][0] == 2.0);
-  assert(m2[1][1] == 3.0);
+  assert(m2[1][1] == 4.0);
   assert(m2[1][2] == 6.0);
 }
 
@@ -247,7 +247,9 @@ auto serialize() -> void {
   Matrix m(4, 3);
   string serialized = m.serialize();
 
-  assert(serialized == "0.0,0.0,0.0;0.0,0.0,0.0;0.0,0.0,0.0;0.0,0.0,0.0");
+  assert(serialized ==
+         "0.000000,0.000000,0.000000;0.000000,0.000000,0.000000;0.000000,0."
+         "000000,0.000000;0.000000,0.000000,0.000000");
 }
 
 auto deserialize() -> void {

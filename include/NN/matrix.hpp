@@ -55,7 +55,7 @@ class Matrix : public Serializer<Matrix> {
   friend auto operator*(const Matrix& lhs, const double& rhs) -> Matrix;
   friend auto operator/(const Matrix& lhs, const double& rhs) -> Matrix;
   /// indexing
-  auto operator[](size_t idx) const -> vector<double>&;
+  auto operator[](size_t idx) -> vector<double>&;
 
   /// transposing flips the x and y axis
   auto transpose() const -> Matrix;

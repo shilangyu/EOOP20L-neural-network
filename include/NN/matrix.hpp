@@ -12,6 +12,23 @@ class Matrix : public Serializer<Matrix> {
   /// size of the matrix
   const unsigned int rows, columns;
 
+  /// custom exception for size mismatches when performing operations
+  struct SizeMismatch : public exception {
+    const Matrix &m1, &m2;
+    const string op_name;
+
+    SizeMismatch(const Matrix& m1, const Matrix& m2, const string op_name)
+        : m1(m1), m2(m2), op_name(op_name) {}
+
+    const char* what() const throw() {
+      return string("Cannot perform " + op_name +
+                    " with mismatched sizes: m1(" + to_string(m1.rows) + ", " +
+                    to_string(m1.columns) + ") and m2(" + to_string(m2.rows) +
+                    ", " + to_string(m2.columns) + ")")
+          .c_str();
+    }
+  };
+
   /// constructor takes the dimensions of the matrix
   Matrix(const unsigned int rows, const unsigned int columns);
 
@@ -52,4 +69,9 @@ class Matrix : public Serializer<Matrix> {
   /// size is immutable and array would seem like a more fitting choice, vector
   /// provides a much safer interface with negligible overhead
   vector<vector<double>> data_;
+
+  /// throws SizeMismatch if rows and columns are different
+  static auto ensure_same_size_(const Matrix& m1,
+                                const Matrix& m2,
+                                const string op_name) -> void;
 };

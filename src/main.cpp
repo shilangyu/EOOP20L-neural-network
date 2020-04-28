@@ -1,6 +1,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "NN/serialize.hpp"
+
 using namespace std;
 
 int main() {

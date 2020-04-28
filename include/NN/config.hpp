@@ -13,7 +13,7 @@ class Config : Serializer<Config> {
   const unsigned int inputs, outputs, layers, hidden_neurons;
   const double learning_rate;
 
-  /// constructor accepting all 4 parameters
+  /// constructor accepting all 5 parameters
   Config(const unsigned int inputs,
          const unsigned int outputs,
          const unsigned int layers,

@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 
+#include "NN/config.hpp"
 #include "NN/serialize.hpp"
 
 using namespace std;

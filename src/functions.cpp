@@ -45,8 +45,24 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       };
       d_last_layer = [](Matrix ys) {
         for (auto& y : ys[0]) {
-          y = y - y * y;
+          y = y * (1.0 - y);
         }
+        return ys;
+      };
+      break;
+    case LastLayer::sigmoid:
+      last_layer = [](Matrix xs) {
+        for (auto& x : xs[0]) {
+          x = 1.0 / (1.0 + exp(-x));
+        }
+
+        return xs;
+      };
+      d_last_layer = [](Matrix ys) {
+        for (auto& y : ys[0]) {
+          y = y * (1.0 - y);
+        }
+
         return ys;
       };
       break;

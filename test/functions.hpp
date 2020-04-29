@@ -46,7 +46,7 @@ auto serialize() -> void {
         return 1.0;
       });
 
-  assert(ff.serialize() == "Activation=3;LastLayer=1;Cost=1");
+  assert(ff.serialize() == "Activation=3;LastLayer=2;Cost=1");
 }
 
 auto deserialize() -> void {

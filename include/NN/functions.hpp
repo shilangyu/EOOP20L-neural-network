@@ -12,7 +12,7 @@ class NNFunctions : public Serializer<NNFunctions> {
   /// enums listing available function
   /// __custom means the function was provided
   enum class Activation { sigmoid, relu, tanh, __custom };
-  enum class LastLayer { softmax, __custom };
+  enum class LastLayer { softmax, sigmoid, __custom };
   enum class Cost { mean_square, __custom };
 
   /// type definitions of the functions

@@ -27,7 +27,7 @@ auto constructor() -> void {
   get();
 }
 
-auto guess() -> void {
+auto classify() -> void {
   NeuralNetwork nn = get();
   Matrix inputs(3, 1);
   inputs.randomize();
@@ -77,8 +77,8 @@ auto init() -> void {
   constructor();
   cout << "\r✅" << endl;
 
-  cout << "\t[guess]";
-  guess();
+  cout << "\t[classify]";
+  classify();
   cout << "\r✅" << endl;
 
   cout << "\t[train]";

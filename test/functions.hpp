@@ -19,10 +19,10 @@ auto constructors() -> void {
 
   NNFunctions ff(
       [](double v) { return v; }, [](double v) { return v; },
-      [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v1, const vector<double>& v2) {
-        v1.capacity();  /// done to avoid the 'unused variable' warning
-        v2.capacity();  /// done to avoid the 'unused variable' warning
+      [](Matrix m) { return m; }, [](Matrix m) { return m; },
+      [](const Matrix& m1, const Matrix& m2) {
+        m1.transpose();  /// done to avoid the 'unused variable' warning
+        m2.transpose();  /// done to avoid the 'unused variable' warning
         return 1.0;
       });
 
@@ -41,10 +41,10 @@ auto serialize() -> void {
 
   NNFunctions ff(
       [](double v) { return v; }, [](double v) { return v; },
-      [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v1, const vector<double>& v2) {
-        v1.capacity();  /// done to avoid the 'unused variable' warning
-        v2.capacity();  /// done to avoid the 'unused variable' warning
+      [](Matrix m) { return m; }, [](Matrix m) { return m; },
+      [](const Matrix& m1, const Matrix& m2) {
+        m1.transpose();  /// done to avoid the 'unused variable' warning
+        m2.transpose();  /// done to avoid the 'unused variable' warning
         return 1.0;
       });
 
@@ -64,19 +64,19 @@ auto deserialize() -> void {
 auto calling() -> void {
   NNFunctions ff(
       [](double v) { return v + 1.0; }, [](double v) { return v + 2.0; },
-      [](vector<double> v) { return v; }, [](vector<double> v) { return v; },
-      [](const vector<double>& v1, const vector<double>& v2) {
-        v1.capacity();  /// done to avoid the 'unused variable' warning
-        v2.capacity();  /// done to avoid the 'unused variable' warning
+      [](Matrix m) { return m; }, [](Matrix m) { return m; },
+      [](const Matrix& m1, const Matrix& m2) {
+        m1.transpose();  /// done to avoid the 'unused variable' warning
+        m2.transpose();  /// done to avoid the 'unused variable' warning
         return 3.2;
       });
 
   assert(ff.activation(1.2) == 2.2);
   assert(ff.d_activation(1.2) == 3.2);
-  vector<double> v = {1.0, 2.0};
-  assert(ff.last_layer(v).size() == 2);
-  assert(ff.d_last_layer(v).size() == 2);
-  assert(ff.cost(v, v) == 3.2);
+  Matrix m(2, 1);
+  assert(ff.last_layer(m).rows == 2);
+  assert(ff.d_last_layer(m).rows == 2);
+  assert(ff.cost(m, m) == 3.2);
 }
 
 auto init() -> void {

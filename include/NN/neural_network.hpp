@@ -37,8 +37,7 @@ class NeuralNetwork : public Serializer<Matrix> {
   Matrix output_w_;
 
   /// biases of the neurons
-  Matrix input_b_;
-  Matrix hidden_b_;
+  vector<Matrix> hidden_b_;
   Matrix output_b_;
 
   /// functions
@@ -48,9 +47,9 @@ class NeuralNetwork : public Serializer<Matrix> {
   Config config_;
 
   /// sends inputs through the whole network and returns the output layer
-  auto feedforward(const Matrix& inputs) const -> Matrix;
+  auto feedforward_(const Matrix& inputs) const -> Matrix;
 
   /// backpropagates the expected output from some input, adjusts the weights,
   /// then returns the cost of the network
-  auto backpropagate(const Matrix& inputs, const Matrix& expected) -> double;
+  auto backpropagate_(const Matrix& inputs, const Matrix& expected) -> double;
 };

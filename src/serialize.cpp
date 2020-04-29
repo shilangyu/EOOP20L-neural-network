@@ -10,11 +10,11 @@
 #include "NN/config.hpp"
 #include "NN/functions.hpp"
 #include "NN/matrix.hpp"
-// #include "NN/neural_network.hpp"
+#include "NN/neural_network.hpp"
 template class Serializer<Config>;
 template class Serializer<NNFunctions>;
 template class Serializer<Matrix>;
-// template class Serializer<NeuralNetwork>;
+template class Serializer<NeuralNetwork>;
 
 using namespace std;
 

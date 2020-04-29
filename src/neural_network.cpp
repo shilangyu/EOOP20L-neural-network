@@ -1,3 +1,4 @@
+#include <experimental/random>
 #include <string>
 #include <vector>
 
@@ -64,21 +65,60 @@ auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
   return best;
 }
 
-// @TODO
 auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
     -> double {
-  inputs.serialize();
-  expected.serialize();
-  return 1.0;
+  // @TODO allow for no hidden layers?
+  const vector<Matrix> nodes = feedforward_(inputs);
+  vector<Matrix> errors, gradients, deltas;
+  const double cost = funcs_.cost(expected, nodes.back());
+
+  errors.push_back(expected - nodes.back());
+  gradients.push_back(
+      funcs_.d_last_layer(nodes.back().transpose()).transpose() * errors[0] *
+      config_.learning_rate);
+  deltas.push_back(gradients[0] * nodes.end()[-2].transpose());
+
+  for (size_t i = 0; i < config_.layers - 1; i++) {
+    errors.push_back((i == 0 ? output_w_ : hidden_w_.end()[-i]).transpose() *
+                     errors.back());
+    Matrix curr = nodes.end()[-i - 2];
+    for (size_t i = 0; i < curr.rows; i++) {
+      curr[i][0] = funcs_.d_activation(curr[i][0]);
+    }
+    gradients.push_back(curr * errors.back() * config_.learning_rate);
+    deltas.push_back(gradients.back() * nodes.end()[-i - 3].transpose());
+  }
+
+  errors.push_back(hidden_w_[0].transpose() * errors.back());
+  Matrix curr = nodes[0];
+  for (size_t i = 0; i < curr.rows; i++) {
+    curr[i][0] = funcs_.d_activation(curr[i][0]);
+  }
+  gradients.push_back(curr * errors.back() * config_.learning_rate);
+  deltas.push_back(gradients.back() * inputs.transpose());
+
+  output_w_ += deltas[0];
+  output_b_ += gradients[0];
+
+  for (size_t i = 0; i < config_.layers - 1; i++) {
+    hidden_w_[i] += deltas[config_.layers - 1 - i];
+    hidden_b_[i + 1] += gradients[config_.layers - 1 - i];
+  }
+
+  input_w_ += deltas.back();
+  hidden_b_[0] += gradients.back();
+
+  return cost;
 }
 
-// @TODO
 auto NeuralNetwork::train(const vector<Matrix>& inputs,
                           const vector<Matrix>& expected,
                           unsigned int n) -> void {
-  inputs.capacity();
-  expected.capacity();
-  to_string(n);
+  for (size_t i = 0; i < n; i++) {
+    int choice =
+        experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
+    backpropagate_(inputs[choice], expected[choice]);
+  }
 }
 
 // @TODO

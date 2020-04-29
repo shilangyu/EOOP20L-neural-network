@@ -14,19 +14,15 @@ class Matrix : public Serializer<Matrix> {
 
   /// custom exception for size mismatches when performing operations
   struct SizeMismatch : public exception {
-    const Matrix &m1, &m2;
-    const string op_name;
+    string msg;
 
-    SizeMismatch(const Matrix& m1, const Matrix& m2, const string op_name)
-        : m1(m1), m2(m2), op_name(op_name) {}
-
-    const char* what() const throw() {
-      return string("Cannot perform " + op_name +
-                    " with mismatched sizes: m1(" + to_string(m1.rows) + ", " +
-                    to_string(m1.columns) + ") and m2(" + to_string(m2.rows) +
-                    ", " + to_string(m2.columns) + ")")
-          .c_str();
+    SizeMismatch(const Matrix& m1, const Matrix& m2, const string op_name) {
+      msg = "Cannot perform operation with mismatched sizes: m1(" +
+            to_string(m1.rows) + ", " + to_string(m1.columns) + ") " + op_name +
+            " m2(" + to_string(m2.rows) + ", " + to_string(m2.columns) + ")";
     }
+
+    const char* what() const throw() { return msg.c_str(); }
   };
 
   /// constructor takes the dimensions of the matrix

@@ -22,10 +22,8 @@ class NNFunctions : public Serializer<NNFunctions> {
   typedef function<auto(double)->double> Activating;
   /// a function that takes an matrix and maps it to different values
   typedef function<auto(Matrix)->Matrix> Mapping;
-  /// a function that takes two arrays of doubles and reduces it to a single
-  /// value
-  typedef function<auto(const vector<double>&, const vector<double>&)->double>
-      Reducing;
+  /// a function that takes two matrices and reduces them to a single value
+  typedef function<auto(const Matrix&, const Matrix&)->double> Reducing;
 
   /// collection of functions
   Activating activation, d_activation;

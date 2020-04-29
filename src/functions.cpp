@@ -56,15 +56,17 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       break;
   }
 
+  // @TODO make sure passed matrices have correct sizes
   switch (cf) {
     case Cost::mean_square:
-      cost = [](const vector<double>& v1, const vector<double>& v2) {
+      cost = [](const Matrix& m1, const Matrix& m2) {
+        Matrix diff = m1 - m2;
         double cost = 0.0;
-        for (size_t i = 0; i < v1.max_size(); i++) {
-          cost += pow(v1[i] - v2[i], 2.0) / 2.0;
+        for (size_t i = 0; i < diff.rows; i++) {
+          cost += pow(diff[i][0], 2.0) / 2.0;
         }
 
-        return cost / (v1.size() * 1.0);
+        return cost / (diff.rows * 1.0);
       };
       break;
     default:

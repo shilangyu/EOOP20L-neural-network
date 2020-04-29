@@ -7,8 +7,6 @@
 #include "NN/matrix.hpp"
 #include "NN/neural_network.hpp"
 
-using namespace std;
-
 NeuralNetwork::NeuralNetwork(Config config, NNFunctions funcs)
     : input_w_(config.hidden_neurons, config.inputs),
       output_w_(config.outputs, config.hidden_neurons),
@@ -29,8 +27,9 @@ NeuralNetwork::NeuralNetwork(Config config, NNFunctions funcs)
   output_b_.randomize();
 }
 
-auto NeuralNetwork::feedforward_(const Matrix& inputs) const -> vector<Matrix> {
-  vector<Matrix> nodes;
+auto NeuralNetwork::feedforward_(const Matrix& inputs) const
+    -> std::vector<Matrix> {
+  std::vector<Matrix> nodes;
 
   // @TODO allow for no hidden layers?
   nodes.push_back(input_w_ * inputs + hidden_b_[0]);
@@ -53,7 +52,7 @@ auto NeuralNetwork::feedforward_(const Matrix& inputs) const -> vector<Matrix> {
 }
 
 auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
-  vector<double> output = feedforward_(inputs).back().transpose()[0];
+  std::vector<double> output = feedforward_(inputs).back().transpose()[0];
 
   unsigned int best = 0;
   for (size_t i = 0; i < output.size(); i++) {
@@ -68,8 +67,8 @@ auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
 auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
     -> double {
   // @TODO allow for no hidden layers?
-  const vector<Matrix> nodes = feedforward_(inputs);
-  vector<Matrix> errors, gradients, deltas;
+  const std::vector<Matrix> nodes = feedforward_(inputs);
+  std::vector<Matrix> errors, gradients, deltas;
   const double cost = funcs_.cost(expected, nodes.back());
 
   errors.push_back(expected - nodes.back());
@@ -111,23 +110,23 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
   return cost;
 }
 
-auto NeuralNetwork::train(const vector<Matrix>& inputs,
-                          const vector<Matrix>& expected,
+auto NeuralNetwork::train(const std::vector<Matrix>& inputs,
+                          const std::vector<Matrix>& expected,
                           unsigned int n) -> void {
   for (size_t i = 0; i < n; i++) {
     int choice =
-        experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
+        std::experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
     backpropagate_(inputs[choice], expected[choice]);
   }
 }
 
 // @TODO
-auto NeuralNetwork::serialize() const -> string {
+auto NeuralNetwork::serialize() const -> std::string {
   return "";
 }
 
 // @TODO
-auto NeuralNetwork::deserialize(const string& str) -> NeuralNetwork {
+auto NeuralNetwork::deserialize(const std::string& str) -> NeuralNetwork {
   str.length();
   Config config(2, 3, 2, 4, 1.0);
   NNFunctions funcs(NNFunctions::Activation::sigmoid,

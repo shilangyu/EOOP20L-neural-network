@@ -3,8 +3,6 @@
 
 #include "NN/serialize.hpp"
 
-using namespace std;
-
 #pragma once
 
 class Matrix : public Serializer<Matrix> {
@@ -13,13 +11,16 @@ class Matrix : public Serializer<Matrix> {
   const unsigned int rows, columns;
 
   /// custom exception for size mismatches when performing operations
-  struct SizeMismatch : public exception {
-    string msg;
+  struct SizeMismatch : public std::exception {
+    std::string msg;
 
-    SizeMismatch(const Matrix& m1, const Matrix& m2, const string op_name) {
+    SizeMismatch(const Matrix& m1,
+                 const Matrix& m2,
+                 const std::string op_name) {
       msg = "Cannot perform operation with mismatched sizes: m1(" +
-            to_string(m1.rows) + ", " + to_string(m1.columns) + ") " + op_name +
-            " m2(" + to_string(m2.rows) + ", " + to_string(m2.columns) + ")";
+            std::to_string(m1.rows) + ", " + std::to_string(m1.columns) + ") " +
+            op_name + " m2(" + std::to_string(m2.rows) + ", " +
+            std::to_string(m2.columns) + ")";
     }
 
     const char* what() const throw() { return msg.c_str(); }
@@ -51,23 +52,23 @@ class Matrix : public Serializer<Matrix> {
   friend auto operator*(const Matrix& lhs, const double& rhs) -> Matrix;
   friend auto operator/(const Matrix& lhs, const double& rhs) -> Matrix;
   /// indexing
-  auto operator[](size_t idx) -> vector<double>&;
+  auto operator[](size_t idx) -> std::vector<double>&;
 
   /// transposing flips the x and y axis
   auto transpose() const -> Matrix;
 
   /// overriding the virtual methods of Serializer
-  auto serialize() const -> string override;
-  static auto deserialize(const string& str) -> Matrix;
+  auto serialize() const -> std::string override;
+  static auto deserialize(const std::string& str) -> Matrix;
 
  private:
   /// thats where the data is stored. Vector was chosen because while the
   /// size is immutable and array would seem like a more fitting choice, vector
   /// provides a much safer interface with negligible overhead
-  vector<vector<double>> data_;
+  std::vector<std::vector<double>> data_;
 
   /// throws SizeMismatch if rows and columns are different
   static auto ensure_same_size_(const Matrix& m1,
                                 const Matrix& m2,
-                                const string op_name) -> void;
+                                const std::string op_name) -> void;
 };

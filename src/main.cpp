@@ -7,8 +7,6 @@
 #include "NN/neural_network.hpp"
 #include "NN/serialize.hpp"
 
-using namespace std;
-
 // @TODO sprinkle std::views/std::ranges/iterators or generators
 // @TODO add comments
 // @TODO optimize: Matrix is initialized too often
@@ -20,8 +18,8 @@ int main() {
                     NNFunctions::Cost::mean_square);
   NeuralNetwork nn(config, funcs);
 
-  vector<Matrix> inputs;
-  vector<Matrix> expected;
+  std::vector<Matrix> inputs;
+  std::vector<Matrix> expected;
 
   // false false -> false
   {
@@ -75,12 +73,12 @@ int main() {
     expected.push_back(e);
   }
 
-  nn.train(inputs, expected, 1000000);
+  nn.train(inputs, expected, 10000);
 
-  cout << "0 ^ 0 = " << nn.classify(inputs[0]) << endl;
-  cout << "0 ^ 1 = " << nn.classify(inputs[1]) << endl;
-  cout << "1 ^ 0 = " << nn.classify(inputs[2]) << endl;
-  cout << "1 ^ 1 = " << nn.classify(inputs[3]) << endl;
+  std::cout << "0 ^ 0 = " << nn.classify(inputs[0]) << std::endl;
+  std::cout << "0 ^ 1 = " << nn.classify(inputs[1]) << std::endl;
+  std::cout << "1 ^ 0 = " << nn.classify(inputs[2]) << std::endl;
+  std::cout << "1 ^ 1 = " << nn.classify(inputs[3]) << std::endl;
 
   return 0;
 }

@@ -3,8 +3,6 @@
 
 #include "NN/config.hpp"
 
-using namespace std;
-
 Config::Config(const unsigned int inputs,
                const unsigned int outputs,
                const unsigned int layers,
@@ -16,13 +14,14 @@ Config::Config(const unsigned int inputs,
       hidden_neurons(hidden_neurons),
       learning_rate(learning_rate) {}
 
-auto Config::serialize() const -> string {
-  return "inputs=" + to_string(inputs) + ';' + "outputs=" + to_string(outputs) +
-         ';' + "layers=" + to_string(layers) + ';' +
-         "hidden_neurons=" + to_string(hidden_neurons) + ';' +
-         "learning_rate=" + to_string(learning_rate);
+auto Config::serialize() const -> std::string {
+  return "inputs=" + std::to_string(inputs) + ';' +
+         "outputs=" + std::to_string(outputs) + ';' +
+         "layers=" + std::to_string(layers) + ';' +
+         "hidden_neurons=" + std::to_string(hidden_neurons) + ';' +
+         "learning_rate=" + std::to_string(learning_rate);
 }
-auto Config::deserialize(const string& str) -> Config {
+auto Config::deserialize(const std::string& str) -> Config {
   unsigned int inputs, outputs, layers, hidden_neurons;
   double learning_rate;
 

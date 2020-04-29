@@ -1,8 +1,6 @@
 #include <cassert>
 #include <iostream>
 
-using namespace std;
-
 #include "NN/config.hpp"
 
 namespace config_tests {
@@ -19,7 +17,7 @@ auto constructor() -> void {
 
 auto serialize() -> void {
   Config c(1, 2, 3, 4, 0.5);
-  string serialized = c.serialize();
+  std::string serialized = c.serialize();
 
   assert(serialized ==
          "inputs=1;outputs=2;layers=3;hidden_neurons=4;learning_rate=0.500000");
@@ -37,19 +35,19 @@ auto deserialize() -> void {
 }
 
 auto init() -> void {
-  cout << "[config]" << endl;
+  std::cout << "[config]" << std::endl;
 
-  cout << "\t[constructor]";
+  std::cout << "\t[constructor]";
   constructor();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[serialize]";
+  std::cout << "\t[serialize]";
   serialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[deserialize]";
+  std::cout << "\t[deserialize]";
   deserialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 }
 
 }  // namespace config_tests

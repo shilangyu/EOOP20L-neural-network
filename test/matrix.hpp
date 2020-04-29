@@ -1,8 +1,6 @@
 #include <cassert>
 #include <iostream>
 
-using namespace std;
-
 #include "NN/matrix.hpp"
 
 namespace matrix_tests {
@@ -245,7 +243,7 @@ auto transpose() -> void {
 
 auto serialize() -> void {
   Matrix m(4, 3);
-  string serialized = m.serialize();
+  std::string serialized = m.serialize();
 
   assert(serialized ==
          "0.000000,0.000000,0.000000;0.000000,0.000000,0.000000;0.000000,0."
@@ -264,35 +262,35 @@ auto deserialize() -> void {
 }
 
 auto init() -> void {
-  cout << "[matrix]" << endl;
+  std::cout << "[matrix]" << std::endl;
 
-  cout << "\t[constructor]";
+  std::cout << "\t[constructor]";
   constructor();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[randomize]";
+  std::cout << "\t[randomize]";
   randomize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[in place operators]";
+  std::cout << "\t[in place operators]";
   in_place_operators();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[global operators]";
+  std::cout << "\t[global operators]";
   global_operators();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[transposing]";
+  std::cout << "\t[transposing]";
   transpose();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[serialize]";
+  std::cout << "\t[serialize]";
   serialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[deserialize]";
+  std::cout << "\t[deserialize]";
   deserialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 }
 
 }  // namespace matrix_tests

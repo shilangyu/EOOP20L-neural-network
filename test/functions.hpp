@@ -1,8 +1,6 @@
 #include <cassert>
 #include <iostream>
 
-using namespace std;
-
 #include "NN/functions.hpp"
 
 namespace functions_tests {
@@ -80,23 +78,23 @@ auto calling() -> void {
 }
 
 auto init() -> void {
-  cout << "[functions]" << endl;
+  std::cout << "[functions]" << std::endl;
 
-  cout << "\t[constructor]";
+  std::cout << "\t[constructor]";
   constructors();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[serialize]";
+  std::cout << "\t[serialize]";
   serialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[deserialize]";
+  std::cout << "\t[deserialize]";
   deserialize();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 
-  cout << "\t[calling]";
+  std::cout << "\t[calling]";
   calling();
-  cout << "\r✅" << endl;
+  std::cout << "\r✅" << std::endl;
 }
 
 }  // namespace functions_tests

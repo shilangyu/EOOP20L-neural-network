@@ -16,32 +16,30 @@ template class Serializer<NNFunctions>;
 template class Serializer<Matrix>;
 template class Serializer<NeuralNetwork>;
 
-using namespace std;
-
 template <typename T>
-auto Serializer<T>::from_file(const string& path) -> T {
-  ifstream file(path);
+auto Serializer<T>::from_file(const std::string& path) -> T {
+  std::ifstream file(path);
 
   // @TODO error handling
   if (!file) {
   }
 
-  stringstream ss;
+  std::stringstream ss;
   ss << file.rdbuf();
-  string contents = ss.str();
+  std::string contents = ss.str();
 
   return T::deserialize(contents);
 }
 
 template <typename T>
-auto Serializer<T>::to_file(const string& path) const -> void {
-  ofstream file(path);
+auto Serializer<T>::to_file(const std::string& path) const -> void {
+  std::ofstream file(path);
 
   // @TODO error handling
   if (!file) {
   }
 
-  file << serialize() << endl;
+  file << serialize() << std::endl;
 }
 
 //  friend auto operator<<<>(ostream& os, const T& obj) -> ostream&;

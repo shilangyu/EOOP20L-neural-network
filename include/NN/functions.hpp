@@ -5,8 +5,6 @@
 #include "NN/matrix.hpp"
 #include "NN/serialize.hpp"
 
-using namespace std;
-
 #pragma once
 
 class NNFunctions : public Serializer<NNFunctions> {
@@ -19,11 +17,11 @@ class NNFunctions : public Serializer<NNFunctions> {
 
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
-  typedef function<auto(double)->double> Activating;
+  typedef std::function<auto(double)->double> Activating;
   /// a function that takes an matrix and maps it to different values
-  typedef function<auto(Matrix)->Matrix> Mapping;
+  typedef std::function<auto(Matrix)->Matrix> Mapping;
   /// a function that takes two matrices and reduces them to a single value
-  typedef function<auto(const Matrix&, const Matrix&)->double> Reducing;
+  typedef std::function<auto(const Matrix&, const Matrix&)->double> Reducing;
 
   /// collection of functions
   Activating activation, d_activation;
@@ -40,8 +38,8 @@ class NNFunctions : public Serializer<NNFunctions> {
               const Reducing cf);
 
   /// overriding the virtual methods of Serializer
-  auto serialize() const -> string override;
-  static auto deserialize(const string& str) -> NNFunctions;
+  auto serialize() const -> std::string override;
+  static auto deserialize(const std::string& str) -> NNFunctions;
 
  private:
   /// remembering which functions were chosen, this information is needed for

@@ -2,8 +2,6 @@
 
 #include "NN/serialize.hpp"
 
-using namespace std;
-
 #pragma once
 
 class Config : public Serializer<Config> {
@@ -21,6 +19,6 @@ class Config : public Serializer<Config> {
          const double learning_rate);
 
   /// overriding the virtual methods of Serializer
-  auto serialize() const -> string override;
-  static auto deserialize(const string& str) -> Config;
+  auto serialize() const -> std::string override;
+  static auto deserialize(const std::string& str) -> Config;
 };

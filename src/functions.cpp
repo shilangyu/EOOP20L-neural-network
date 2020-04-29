@@ -5,13 +5,11 @@
 #include "NN/functions.hpp"
 #include "NN/matrix.hpp"
 
-using namespace std;
-
 NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
     : af_(af), llf_(llf), cf_(cf) {
   switch (af) {
     case Activation::relu:
-      activation = [](double x) { return max(0.0, x); };
+      activation = [](double x) { return std::max(0.0, x); };
       d_activation = [](double y) { return y > 0.0 ? 1.0 : 0.0; };
       break;
     case Activation::sigmoid:
@@ -32,7 +30,7 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       last_layer = [](Matrix xs) {
         double biggest = xs[0][0];
         for (auto x : xs[0]) {
-          biggest = max(biggest, x);
+          biggest = std::max(biggest, x);
         }
 
         double sum = 0.0;
@@ -88,13 +86,13 @@ NNFunctions::NNFunctions(const Activating af,
       llf_(LastLayer::__custom),
       cf_(Cost::__custom) {}
 
-auto NNFunctions::serialize() const -> string {
-  return "Activation=" + to_string(static_cast<int>(af_)) + ';' +
-         "LastLayer=" + to_string(static_cast<int>(llf_)) + ';' +
-         "Cost=" + to_string(static_cast<int>(cf_));
+auto NNFunctions::serialize() const -> std::string {
+  return "Activation=" + std::to_string(static_cast<int>(af_)) + ';' +
+         "LastLayer=" + std::to_string(static_cast<int>(llf_)) + ';' +
+         "Cost=" + std::to_string(static_cast<int>(cf_));
 }
 
-auto NNFunctions::deserialize(const string& str) -> NNFunctions {
+auto NNFunctions::deserialize(const std::string& str) -> NNFunctions {
   int af, llf, cf;
 
   sscanf(str.c_str(), "Activation=%d;LastLayer=%d;Cost=%d", &af, &llf, &cf);

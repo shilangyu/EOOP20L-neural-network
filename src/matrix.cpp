@@ -3,15 +3,15 @@
 
 #include "NN/matrix.hpp"
 
-using namespace std;
-
 Matrix::Matrix(const unsigned int rows, const unsigned int columns)
-    : rows(rows), columns(columns), data_(vector(rows, vector(columns, 0.0))) {}
+    : rows(rows),
+      columns(columns),
+      data_(std::vector(rows, std::vector(columns, 0.0))) {}
 
 auto Matrix::randomize(const double min, const double max) -> void {
-  static random_device rd;
-  static default_random_engine engine(rd());
-  uniform_real_distribution<> dis(min, max);
+  static std::random_device rd;
+  static std::default_random_engine engine(rd());
+  std::uniform_real_distribution<> dis(min, max);
 
   for (auto& row : data_) {
     for (auto& x : row) {
@@ -22,7 +22,7 @@ auto Matrix::randomize(const double min, const double max) -> void {
 
 auto Matrix::ensure_same_size_(const Matrix& m1,
                                const Matrix& m2,
-                               const string op_name) -> void {
+                               const std::string op_name) -> void {
   if (m1.rows != m2.rows || m1.columns != m2.columns) {
     throw SizeMismatch(m1, m2, op_name);
   }
@@ -145,7 +145,7 @@ auto operator/(const Matrix& lhs, const double& rhs) -> Matrix {
   return lhs * (1.0 / rhs);
 }
 
-auto Matrix::operator[](size_t idx) -> vector<double>& {
+auto Matrix::operator[](size_t idx) -> std::vector<double>& {
   return data_[idx];
 }
 
@@ -161,12 +161,12 @@ auto Matrix::transpose() const -> Matrix {
   return transposed;
 }
 
-auto Matrix::serialize() const -> string {
-  string ser;
+auto Matrix::serialize() const -> std::string {
+  std::string ser;
 
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < columns; j++) {
-      ser += to_string(data_[i][j]);
+      ser += std::to_string(data_[i][j]);
       if (j != columns - 1) {
         ser += ',';
       }
@@ -179,10 +179,10 @@ auto Matrix::serialize() const -> string {
   return ser;
 }
 
-auto Matrix::deserialize(const string& str) -> Matrix {
-  auto split = [](const string& str, const char& delim) {
-    string buffer;
-    vector<string> chunks;
+auto Matrix::deserialize(const std::string& str) -> Matrix {
+  auto split = [](const std::string& str, const char& delim) {
+    std::string buffer;
+    std::vector<std::string> chunks;
 
     for (auto c : str) {
       if (c != delim) {
@@ -199,11 +199,11 @@ auto Matrix::deserialize(const string& str) -> Matrix {
     return chunks;
   };
 
-  vector<vector<double>> values;
+  std::vector<std::vector<double>> values;
   for (auto& row : split(str, ';')) {
-    values.push_back(vector<double>());
+    values.push_back(std::vector<double>());
     for (auto& num : split(row, ',')) {
-      values.back().push_back(stod(num));
+      values.back().push_back(std::stod(num));
     }
   }
 

@@ -1,8 +1,6 @@
 #include <cassert>
 #include <iostream>
 
-using namespace std;
-
 #include "./config.hpp"
 #include "./functions.hpp"
 #include "./matrix.hpp"

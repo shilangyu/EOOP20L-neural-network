@@ -45,25 +45,18 @@ auto NeuralNetwork::feedforward_(const Matrix& inputs) const -> vector<Matrix> {
     nodes.push_back(curr);
   }
 
-  nodes.push_back(output_w_ * nodes.back() + output_b_);
-  vector<double> outs;
-  for (size_t i = 0; i < config_.outputs; i++) {
-    outs.push_back(nodes.back()[i][0]);
-  }
-  outs = funcs_.last_layer(outs);
-  for (size_t i = 0; i < config_.outputs; i++) {
-    nodes.back()[i][0] = outs[i];
-  }
+  Matrix outs = (output_w_ * nodes.back() + output_b_).transpose();
+  nodes.push_back(funcs_.last_layer(outs).transpose());
 
   return nodes;
 }
 
 auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
-  Matrix output = feedforward_(inputs).back();
+  vector<double> output = feedforward_(inputs).back().transpose()[0];
 
   unsigned int best = 0;
-  for (size_t i = 0; i < output.rows; i++) {
-    if (output[i][0] > output[best][0]) {
+  for (size_t i = 0; i < output.size(); i++) {
+    if (output[i] > output[best]) {
       best = i;
     }
   }

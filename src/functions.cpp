@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "NN/functions.hpp"
+#include "NN/matrix.hpp"
 
 using namespace std;
 
@@ -25,26 +26,27 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       break;
   }
 
+  // @TODO make sure passed matrices have correct sizes
   switch (llf) {
     case LastLayer::softmax:
-      last_layer = [](vector<double> xs) {
-        double biggest = xs[0];
-        for (auto x : xs) {
+      last_layer = [](Matrix xs) {
+        double biggest = xs[0][0];
+        for (auto x : xs[0]) {
           biggest = max(biggest, x);
         }
 
         double sum = 0.0;
-        for (auto& x : xs) {
+        for (auto& x : xs[0]) {
           x = exp(x - biggest);
           sum += x;
         }
-        for (auto& x : xs) {
+        for (auto& x : xs[0]) {
           x /= sum;
         }
         return xs;
       };
-      d_last_layer = [](vector<double> ys) {
-        for (auto& y : ys) {
+      d_last_layer = [](Matrix ys) {
+        for (auto& y : ys[0]) {
           y = y - y * y;
         }
         return ys;

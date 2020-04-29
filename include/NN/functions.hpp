@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "NN/matrix.hpp"
 #include "NN/serialize.hpp"
 
 using namespace std;
@@ -19,8 +20,8 @@ class NNFunctions : public Serializer<NNFunctions> {
   /// type definitions of the functions
   /// a function that takes a double and decides if its active
   typedef function<auto(double)->double> Activating;
-  /// a function that takes an array of doubles and maps it to different values
-  typedef function<auto(vector<double>)->vector<double>> Mapping;
+  /// a function that takes an matrix and maps it to different values
+  typedef function<auto(Matrix)->Matrix> Mapping;
   /// a function that takes two arrays of doubles and reduces it to a single
   /// value
   typedef function<auto(const vector<double>&, const vector<double>&)->double>

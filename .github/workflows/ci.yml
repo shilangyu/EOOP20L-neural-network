@@ -16,5 +16,8 @@ jobs:
       - name: Print GCC version
         run: gcc --version
 
+      - name: Print CLANG version
+        run: clang --version
+
       - name: Tests
         run: ./test.sh

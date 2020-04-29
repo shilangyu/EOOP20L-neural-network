@@ -114,7 +114,7 @@ auto in_place_operators() -> void {
   }
 }
 
-auto global_operators() -> void {  // @TODO
+auto global_operators() -> void {
   auto get = [](int rows = 1) {
     Matrix m(rows, 2);
 

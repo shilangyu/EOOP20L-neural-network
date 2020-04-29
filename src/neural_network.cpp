@@ -28,38 +28,38 @@ NeuralNetwork::NeuralNetwork(Config config, NNFunctions funcs)
   output_b_.randomize();
 }
 
-auto NeuralNetwork::feedforward_(const Matrix& inputs) const -> Matrix {
+auto NeuralNetwork::feedforward_(const Matrix& inputs) const -> vector<Matrix> {
+  vector<Matrix> nodes;
+
   // @TODO allow for no hidden layers?
-  Matrix h0 = input_w_ * inputs + hidden_b_[0];
+  nodes.push_back(input_w_ * inputs + hidden_b_[0]);
   for (size_t i = 0; i < config_.hidden_neurons; i++) {
-    h0[i][0] = funcs_.activation(h0[i][0]);
+    nodes[0][i][0] = funcs_.activation(nodes[0][i][0]);
   }
 
-  vector<Matrix> hiddens;
   for (size_t i = 0; i < config_.layers - 1; i++) {
-    Matrix curr =
-        hidden_w_[i] * (i == 0 ? h0 : hiddens[i - 1]) + hidden_b_[i + 1];
+    Matrix curr = hidden_w_[i] * nodes[i] + hidden_b_[i + 1];
     for (size_t i = 0; i < config_.hidden_neurons; i++) {
       curr[i][0] = funcs_.activation(curr[i][0]);
     }
-    hiddens.push_back(curr);
+    nodes.push_back(curr);
   }
 
-  Matrix output = output_w_ * hiddens.back() + output_b_;
+  nodes.push_back(output_w_ * nodes.back() + output_b_);
   vector<double> outs;
   for (size_t i = 0; i < config_.outputs; i++) {
-    outs.push_back(output[i][0]);
+    outs.push_back(nodes.back()[i][0]);
   }
   outs = funcs_.last_layer(outs);
   for (size_t i = 0; i < config_.outputs; i++) {
-    output[i][0] = outs[i];
+    nodes.back()[i][0] = outs[i];
   }
 
-  return output;
+  return nodes;
 }
 
 auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
-  Matrix output = feedforward_(inputs);
+  Matrix output = feedforward_(inputs).back();
 
   unsigned int best = 0;
   for (size_t i = 0; i < output.rows; i++) {
@@ -69,6 +69,14 @@ auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
   }
 
   return best;
+}
+
+// @TODO
+auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
+    -> double {
+  inputs.serialize();
+  expected.serialize();
+  return 1.0;
 }
 
 // @TODO
@@ -93,12 +101,4 @@ auto NeuralNetwork::deserialize(const string& str) -> NeuralNetwork {
                     NNFunctions::LastLayer::softmax,
                     NNFunctions::Cost::mean_square);
   return {config, funcs};
-}
-
-// @TODO
-auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
-    -> double {
-  inputs.serialize();
-  expected.serialize();
-  return 1.0;
 }

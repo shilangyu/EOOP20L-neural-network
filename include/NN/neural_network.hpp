@@ -46,8 +46,8 @@ class NeuralNetwork : public Serializer<Matrix> {
   /// config
   Config config_;
 
-  /// sends inputs through the whole network and returns the output layer
-  auto feedforward_(const Matrix& inputs) const -> Matrix;
+  /// sends inputs through the whole network and returns values of all nodes
+  auto feedforward_(const Matrix& inputs) const -> vector<Matrix>;
 
   /// backpropagates the expected output from some input, adjusts the weights,
   /// then returns the cost of the network

@@ -13,11 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install new GCC
-        run: sudo apt-get install -y gcc-9
-
       - name: Print GCC version
-        run: gcc --version
+        run: gcc-9 --version
 
       - name: Tests
-        run: ./test.sh
+        run: sed -i 's/g++/g++-9/g' test.sh | source

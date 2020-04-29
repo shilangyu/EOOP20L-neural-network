@@ -105,7 +105,23 @@ auto operator-(const Matrix& lhs, const double& rhs) -> Matrix {
   return lhs + (-rhs);
 }
 
-// auto operator*(const Matrix& lhs, const Matrix& rhs) -> Matrix {}
+auto operator*(const Matrix& lhs, const Matrix& rhs) -> Matrix {
+  if (lhs.columns != rhs.rows) {
+    throw Matrix::SizeMismatch(lhs, rhs, "*");
+  }
+
+  Matrix m(lhs.rows, rhs.columns);
+
+  for (size_t k = 0; k < m.columns; k++) {
+    for (size_t i = 0; i < m.rows; i++) {
+      for (size_t j = 0; j < lhs.columns; j++) {
+        m[i][k] += (lhs.data_[i][j] * rhs.data_[j][k]);
+      }
+    }
+  }
+
+  return m;
+}
 
 auto operator*(const Matrix& lhs, const double& rhs) -> Matrix {
   Matrix m = lhs;

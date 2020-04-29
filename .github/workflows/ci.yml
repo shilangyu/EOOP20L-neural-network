@@ -13,11 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install new GCC
+        run: sudo apt-get install -y gcc-9
+
       - name: Print GCC version
         run: gcc --version
-
-      - name: Print CLANG version
-        run: clang --version
 
       - name: Tests
         run: ./test.sh

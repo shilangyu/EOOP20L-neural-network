@@ -84,19 +84,19 @@ auto init() -> void {
 
   cout << "\t[constructor]";
   constructors();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[serialize]";
   serialize();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[deserialize]";
   deserialize();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[calling]";
   calling();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 }
 
 }  // namespace functions_tests

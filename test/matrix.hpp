@@ -268,31 +268,31 @@ auto init() -> void {
 
   cout << "\t[constructor]";
   constructor();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[randomize]";
   randomize();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[in place operators]";
   in_place_operators();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[global operators]";
   global_operators();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[transposing]";
   transpose();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[serialize]";
   serialize();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 
   cout << "\t[deserialize]";
   deserialize();
-  cout << " ✅" << endl;
+  cout << "\r✅" << endl;
 }
 
 }  // namespace matrix_tests

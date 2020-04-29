@@ -17,4 +17,6 @@ jobs:
         run: gcc-9 --version
 
       - name: Tests
-        run: sed -i 's/g++/g++-9/g' test.sh | source
+        run: |
+          sed -i 's/g++/g++-9/g' test.sh 
+          ./test.sh

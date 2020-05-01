@@ -8,9 +8,7 @@
 #include "NN/neural_network.hpp"
 #include "NN/serialize.hpp"
 
-// @TODO sprinkle std::views/std::ranges/iterators or generators
 // @TODO optimize: Matrix is initialized too often
-// @TODO allow for 1 hidden layer
 // @TODO const indexing of matrix
 
 namespace mnist {

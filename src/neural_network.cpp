@@ -99,7 +99,10 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
   }
 
   // input <- first hidden layer
-  errors.push_back(hidden_w_[0].transpose() * errors.back());
+  // if there are no hidden weights (= there is one layer) use output weights
+  errors.push_back(
+      (config_.layers == 1 ? output_w_ : hidden_w_[0]).transpose() *
+      errors.back());
   Matrix curr = nodes[0];
   for (size_t i = 0; i < curr.rows; i++) {
     curr[i][0] = funcs_.d_activation(curr[i][0]);

@@ -33,16 +33,21 @@ auto load(std::string path) -> std::vector<Digit> {
     uint8_t label = static_cast<uint8_t>(buff[0] - '0');
     std::array<uint8_t, RESOLUTION> pixels;
 
-    std::string inner_buff;
+    uint8_t curr = 0;
     size_t index = 0;
     // starting from 2 to because 0 is the label and 1 is a comma
     for (size_t i = 2; i < buff.size(); i++) {
-      // new comma, parse the buffer and reset it
       if (buff[i] == ',') {
-        pixels[index++] = static_cast<uint8_t>(std::stoi(inner_buff));
-        inner_buff.clear();
+        pixels[index++] = curr;
+        curr = 0;
       } else {
-        inner_buff.push_back(buff[i]);
+        // example why this works:
+        // curr = 0
+        // read 2 => curr *= 10 (curr = 0) => curr += 2 (curr = 2)
+        // read 1 => curr *= 10 (curr = 20) => curr += 1 (curr = 21)
+        // read 9 => curr *= 10 (curr = 210) => curr += 1 (curr = 219)
+        curr *= 10;
+        curr += static_cast<uint8_t>(buff[i] - '0');
       }
     }
 
@@ -55,17 +60,13 @@ auto load(std::string path) -> std::vector<Digit> {
 namespace {
 /// takes digits and turns them into inputs that can be fed to the NN
 auto map_to_nn_inputs(const std::vector<Digit>& digits) -> std::vector<Matrix> {
-  std::vector<Matrix> inputs;
-  // we will potentially push 50K+ elements, reserve capacity ahead of time
-  inputs.reserve(digits.size());
+  std::vector<Matrix> inputs(digits.size(), Matrix(RESOLUTION, 1));
 
-  for (auto& d : digits) {
-    Matrix input(RESOLUTION, 1);
-    for (size_t i = 0; i < d.pixels.size(); i++) {
+  for (size_t i = 0; i < inputs.size(); i++) {
+    for (size_t j = 0; j < digits[i].pixels.size(); j++) {
       // normalizing
-      input[i][0] = d.pixels[i] / 255.0;
+      inputs[i][j][0] = digits[i].pixels[j] / 255.0;
     }
-    inputs.push_back(input);
   }
 
   return inputs;
@@ -76,13 +77,11 @@ auto map_to_nn_inputs(const std::vector<Digit>& digits) -> std::vector<Matrix> {
 /// that can be fed to the NN
 auto map_to_nn_train(const std::vector<Digit>& digits)
     -> std::tuple<std::vector<Matrix>, std::vector<Matrix>> {
-  std::vector<Matrix> inputs = map_to_nn_inputs(digits), expected;
-  expected.reserve(digits.size());
+  std::vector<Matrix> inputs = map_to_nn_inputs(digits),
+                      expected(digits.size(), Matrix(10, 1));
 
-  for (auto& d : digits) {
-    Matrix label(10, 1);
-    label[d.label][0] = 1.0;
-    expected.push_back(label);
+  for (size_t i = 0; i < expected.size(); i++) {
+    expected[i][digits[i].label][0] = 1.0;
   }
 
   return std::tuple(inputs, expected);

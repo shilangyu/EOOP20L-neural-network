@@ -120,6 +120,22 @@ auto NeuralNetwork::train(const std::vector<Matrix>& inputs,
   }
 }
 
+auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
+                         const std::vector<unsigned int>& expected,
+                         unsigned int n) const -> double {
+  unsigned int goods = 0;
+
+  for (size_t i = 0; i < n; i++) {
+    int choice =
+        std::experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
+    if (classify(inputs[choice]) == expected[choice]) {
+      goods += 1;
+    }
+  }
+
+  return goods / static_cast<double>(n);
+}
+
 // @TODO
 auto NeuralNetwork::serialize() const -> std::string {
   return "";

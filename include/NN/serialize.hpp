@@ -18,9 +18,6 @@ class Serializer {
   /// overwrites all content if the file already exists
   auto to_file(const std::string& path) const -> void;
 
-  /// prints the serialized object
-  // friend auto operator<<<>(ostream& os, const T& obj) -> ostream&;
-
   /// virtual methods that have to be implemented by parent classes
   /// then the serializer can work properly
   virtual auto serialize() const -> std::string = 0;

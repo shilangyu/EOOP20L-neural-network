@@ -20,8 +20,8 @@ template <typename T>
 auto Serializer<T>::from_file(const std::string& path) -> T {
   std::ifstream file(path);
 
-  // @TODO error handling
   if (!file) {
+    throw std::runtime_error("Could not find the specified file");
   }
 
   std::stringstream ss;
@@ -35,11 +35,5 @@ template <typename T>
 auto Serializer<T>::to_file(const std::string& path) const -> void {
   std::ofstream file(path);
 
-  // @TODO error handling
-  if (!file) {
-  }
-
   file << serialize() << std::endl;
 }
-
-//  friend auto operator<<<>(ostream& os, const T& obj) -> ostream&;

@@ -24,7 +24,6 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       break;
   }
 
-  // @TODO make sure passed matrices have correct sizes
   switch (llf) {
     case LastLayer::softmax:
       last_layer = [](Matrix xs) {
@@ -45,6 +44,8 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       };
       d_last_layer = [](Matrix ys) {
         for (auto& y : ys[0]) {
+          // this is not entirely true, it should take into account if i == j,
+          // but it's minor
           y = y * (1.0 - y);
         }
         return ys;
@@ -70,7 +71,6 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
       break;
   }
 
-  // @TODO make sure passed matrices have correct sizes
   switch (cf) {
     case Cost::mean_square:
       cost = [](const Matrix& m1, const Matrix& m2) {

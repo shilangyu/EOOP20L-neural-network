@@ -9,8 +9,9 @@
 #include "NN/serialize.hpp"
 
 // @TODO sprinkle std::views/std::ranges/iterators or generators
-// @TODO add comments
 // @TODO optimize: Matrix is initialized too often
+// @TODO allow for 1 hidden layer
+// @TODO const indexing of matrix
 
 namespace mnist {
 const size_t RESOLUTION = 28 * 28;
@@ -20,6 +21,8 @@ struct Digit {
   std::array<uint8_t, RESOLUTION> pixels;
 };
 
+/// loads a csv from a given path and parses the content into Digits
+/// it doesn't verify if the file is correct
 auto load(std::string path) -> std::vector<Digit> {
   std::ifstream f(path);
 
@@ -28,12 +31,15 @@ auto load(std::string path) -> std::vector<Digit> {
   std::string buff;
 
   while (std::getline(f, buff, '\n').good()) {
+    // label is always the first char in a line
     uint8_t label = static_cast<uint8_t>(buff[0] - '0');
     std::array<uint8_t, RESOLUTION> pixels;
 
     std::string inner_buff;
     size_t index = 0;
+    // starting from 2 to because 0 is the label and 1 is a comma
     for (size_t i = 2; i < buff.size(); i++) {
+      // new comma, parse the buffer and reset it
       if (buff[i] == ',') {
         pixels[index++] = static_cast<uint8_t>(std::stoi(inner_buff));
         inner_buff.clear();
@@ -49,12 +55,16 @@ auto load(std::string path) -> std::vector<Digit> {
 }
 
 namespace {
+/// takes digits and turns them into inputs that can be fed to the NN
 auto map_to_nn_inputs(const std::vector<Digit>& digits) -> std::vector<Matrix> {
   std::vector<Matrix> inputs;
+  // we will potentially push 50K+ elements, reserve capacity ahead of time
+  inputs.reserve(digits.size());
 
   for (auto& d : digits) {
     Matrix input(RESOLUTION, 1);
     for (size_t i = 0; i < d.pixels.size(); i++) {
+      // normalizing
       input[i][0] = d.pixels[i] / 255.0;
     }
     inputs.push_back(input);
@@ -64,9 +74,12 @@ auto map_to_nn_inputs(const std::vector<Digit>& digits) -> std::vector<Matrix> {
 }
 }  // namespace
 
+/// maps digits to a tuple of inputs and expected outputs
+/// that can be fed to the NN
 auto map_to_nn_train(const std::vector<Digit>& digits)
     -> std::tuple<std::vector<Matrix>, std::vector<Matrix>> {
   std::vector<Matrix> inputs = map_to_nn_inputs(digits), expected;
+  expected.reserve(digits.size());
 
   for (auto& d : digits) {
     Matrix label(10, 1);
@@ -77,10 +90,13 @@ auto map_to_nn_train(const std::vector<Digit>& digits)
   return std::tuple(inputs, expected);
 }
 
+/// maps digits to a tuple of inputs and expected classifications
+/// that can be fed to the NN
 auto map_to_nn_test(const std::vector<Digit>& digits)
     -> std::tuple<std::vector<Matrix>, std::vector<unsigned int>> {
   std::vector<Matrix> inputs = map_to_nn_inputs(digits);
   std::vector<unsigned int> expected;
+  expected.reserve(digits.size());
 
   for (auto& d : digits) {
     expected.push_back(static_cast<unsigned int>(d.label));
@@ -91,7 +107,7 @@ auto map_to_nn_test(const std::vector<Digit>& digits)
 }  // namespace mnist
 
 int main() {
-  Config config(28 * 28, 10, 3, 20, 0.01);
+  Config config(mnist::RESOLUTION, 10, 3, 20, 0.01);
   NNFunctions funcs(NNFunctions::Activation::sigmoid,
                     NNFunctions::LastLayer::softmax,
                     NNFunctions::Cost::mean_square);
@@ -102,7 +118,7 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_train(mnist::load("mnist_train.csv"));
     std::cout << "Training..." << std::endl;
-    nn.train(inputs, expected, 60000);
+    nn.train(inputs, expected, 1);
   }
 
   {
@@ -110,7 +126,7 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_test(mnist::load("mnist_test.csv"));
     std::cout << "Testing..." << std::endl;
-    double accuracy = nn.test(inputs, expected, 10000);
+    double accuracy = nn.test(inputs, expected, 1);
     std::cout << "Final accuracy: " << accuracy * 100 << "%" << std::endl;
   }
 

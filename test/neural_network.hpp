@@ -53,6 +53,24 @@ auto train() -> void {
   nn.train(inputs, expected, 100);
 }
 
+auto test() -> void {
+  NeuralNetwork nn = get();
+
+  std::vector<Matrix> inputs;
+  for (int i = 0; i < 5; i++) {
+    Matrix m(2, 1);
+    m.randomize();
+    inputs.push_back(m);
+  }
+
+  std::vector<unsigned int> expected;
+  for (int i = 0; i < 5; i++) {
+    expected.push_back(i);
+  }
+
+  nn.test(inputs, expected, 100);
+}
+
 auto serialize() -> void {
   auto nn = get();
   std::string serialized = nn.serialize();
@@ -88,6 +106,10 @@ auto init() -> void {
 
   std::cout << "\t[train]";
   train();
+  std::cout << "\r✅" << std::endl;
+
+  std::cout << "\t[test]";
+  test();
   std::cout << "\r✅" << std::endl;
 
   std::cout << "\t[serialize]";

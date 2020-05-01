@@ -106,10 +106,10 @@ auto operator-(const Matrix& lhs, const double& rhs) -> Matrix {
 }
 
 auto operator*(const Matrix& lhs, const Matrix& rhs) -> Matrix {
+  // can i do a dot product?
   if (lhs.columns != rhs.rows) {
-    if (lhs.rows != rhs.rows || lhs.columns != rhs.columns) {
-      throw Matrix::SizeMismatch(lhs, rhs, "*");
-    }
+    // can i do an element wise multiplication?
+    Matrix::ensure_same_size_(lhs, rhs, "*");
 
     Matrix m(lhs.rows, lhs.columns);
 
@@ -163,6 +163,8 @@ auto Matrix::transpose() const -> Matrix {
 
 auto Matrix::serialize() const -> std::string {
   std::string ser;
+
+  // join elements with , rows with ;
 
   for (size_t i = 0; i < rows; i++) {
     for (size_t j = 0; j < columns; j++) {

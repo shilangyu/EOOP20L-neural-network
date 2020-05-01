@@ -8,9 +8,6 @@
 #include "NN/neural_network.hpp"
 #include "NN/serialize.hpp"
 
-// @TODO optimize: Matrix is initialized too often
-// @TODO const indexing of matrix
-
 namespace mnist {
 const size_t RESOLUTION = 28 * 28;
 
@@ -104,7 +101,7 @@ auto map_to_nn_test(const std::vector<Digit>& digits)
 }  // namespace mnist
 
 int main() {
-  Config config(mnist::RESOLUTION, 10, 3, 20, 0.01);
+  Config config(mnist::RESOLUTION, 10, 2, 16, 0.01);
   NNFunctions funcs(NNFunctions::Activation::sigmoid,
                     NNFunctions::LastLayer::softmax,
                     NNFunctions::Cost::mean_square);
@@ -115,7 +112,7 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_train(mnist::load("mnist_train.csv"));
     std::cout << "Training..." << std::endl;
-    nn.train(inputs, expected, 1);
+    nn.train(inputs, expected, 60000);
   }
 
   {
@@ -123,7 +120,7 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_test(mnist::load("mnist_test.csv"));
     std::cout << "Testing..." << std::endl;
-    double accuracy = nn.test(inputs, expected, 1);
+    double accuracy = nn.test(inputs, expected, 10000);
     std::cout << "Final accuracy: " << accuracy * 100 << "%" << std::endl;
   }
 

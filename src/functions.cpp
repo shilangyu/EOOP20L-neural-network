@@ -27,41 +27,41 @@ NNFunctions::NNFunctions(Activation af, LastLayer llf, Cost cf)
   switch (llf) {
     case LastLayer::softmax:
       last_layer = [](Matrix xs) {
-        double biggest = xs[0][0];
-        for (auto x : xs[0]) {
-          biggest = std::max(biggest, x);
+        double max = xs[0][0];
+        for (size_t i = 0; i < xs.rows; i++) {
+          max = std::max(max, xs[i][0]);
         }
 
         double sum = 0.0;
-        for (auto& x : xs[0]) {
-          x = exp(x - biggest);
-          sum += x;
+        for (size_t i = 0; i < xs.rows; i++) {
+          xs[i][0] = exp(xs[i][0] - max);
+          sum += xs[i][0];
         }
-        for (auto& x : xs[0]) {
-          x /= sum;
+        for (size_t i = 0; i < xs.rows; i++) {
+          xs[i][0] /= sum;
         }
         return xs;
       };
       d_last_layer = [](Matrix ys) {
-        for (auto& y : ys[0]) {
+        for (size_t i = 0; i < ys.rows; i++) {
           // this is not entirely true, it should take into account if i == j,
           // but it's minor
-          y = y * (1.0 - y);
+          ys[i][0] = ys[i][0] * (1.0 - ys[i][0]);
         }
         return ys;
       };
       break;
     case LastLayer::sigmoid:
       last_layer = [](Matrix xs) {
-        for (auto& x : xs[0]) {
-          x = 1.0 / (1.0 + exp(-x));
+        for (size_t i = 0; i < xs.rows; i++) {
+          xs[i][0] = 1.0 / (1.0 + exp(-xs[i][0]));
         }
 
         return xs;
       };
       d_last_layer = [](Matrix ys) {
-        for (auto& y : ys[0]) {
-          y = y * (1.0 - y);
+        for (size_t i = 0; i < ys.rows; i++) {
+          ys[i][0] = ys[i][0] * (1.0 - ys[i][0]);
         }
 
         return ys;

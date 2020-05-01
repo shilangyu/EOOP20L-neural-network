@@ -49,8 +49,8 @@ auto NeuralNetwork::feedforward_(const Matrix& inputs) const
   }
 
   // last hidden layer -> output layer
-  Matrix outs = (output_w_ * nodes.back() + output_b_).transpose();
-  nodes.push_back(funcs_.last_layer(outs).transpose());
+  Matrix outs = output_w_ * nodes.back() + output_b_;
+  nodes.push_back(funcs_.last_layer(outs));
 
   return nodes;
 }
@@ -80,9 +80,8 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
 
   // last hidden layer <- output
   errors.push_back(expected - nodes.back());
-  gradients.push_back(
-      funcs_.d_last_layer(nodes.back().transpose()).transpose() * errors[0] *
-      config_.learning_rate);
+  gradients.push_back(funcs_.d_last_layer(nodes.back()) * errors[0] *
+                      config_.learning_rate);
   deltas.push_back(gradients[0] * nodes.end()[-2].transpose());
 
   // hidden layer <<- hidden layer

@@ -112,7 +112,8 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_train(mnist::load("mnist_train.csv"));
     std::cout << "Training..." << std::endl;
-    nn.train(inputs, expected, 60000);
+    nn.train(inputs, expected, 100000);
+    nn.to_file("brain.txt");
   }
 
   {

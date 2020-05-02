@@ -8,7 +8,7 @@
 
 #pragma once
 
-class NeuralNetwork : public Serializer<Matrix> {
+class NeuralNetwork : public Serializer<NeuralNetwork> {
  public:
   /// constructor takes the previously defined configuration
   NeuralNetwork(Config config, NNFunctions funcs);

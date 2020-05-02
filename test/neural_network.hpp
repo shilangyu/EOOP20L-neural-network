@@ -11,7 +11,7 @@ namespace neural_network_tests {
 
 namespace {
 auto get() -> NeuralNetwork {
-  Config c(2, 2, 2, 1, 0.5);
+  Config c(2, 2, 3, 1, 0.5);
   NNFunctions f(NNFunctions::Activation::sigmoid,
                 NNFunctions::LastLayer::softmax,
                 NNFunctions::Cost::mean_square);
@@ -71,26 +71,26 @@ auto test() -> void {
   nn.test(inputs, expected, 100);
 }
 
-auto serialize() -> void {
-  auto nn = get();
-  std::string serialized = nn.serialize();
+auto serialize_and_deserialize() -> void {
+  std::string ser =
+      ("inputs=2;outputs=2;layers=2;hidden_neurons=1;learning_rate=0.500000\n"
+       "Activation=0;LastLayer=1;Cost=0\n"
+       "1.000000,10.000000\n"
+       "2.000000\n"
+       "3.000000;8.000000\n"
+       "4.001000|7.000000\n"
+       "5.000000;6.000000");
+  auto nn = NeuralNetwork::deserialize(ser);
+  assert(ser == nn.serialize());
 
-  assert(false && "test not created");
-  assert(serialized ==
-         ("inputs=2;outputs=2;layers=2;hidden_neurons=1;learning_rate=0.5\n"
-          "Activation=0;LastLayer=0;Cost=0\n"
-          ""));
-  /* Matrix input_w_;
-std::vector<Matrix> hidden_w_;
-Matrix output_w_;
+  Matrix in(2, 1);
+  in.randomize();
 
-/// biases of the neurons
-std::vector<Matrix> hidden_b_;
-Matrix output_b_; */
-}
+  Matrix out(2, 1);
+  out.randomize();
 
-auto deserialize() -> void {
-  assert(false && "test not created");
+  nn.train({in}, {out}, 100);
+  nn.test({in}, {1}, 100);
 }
 
 auto init() -> void {
@@ -112,12 +112,8 @@ auto init() -> void {
   test();
   std::cout << "\r✅" << std::endl;
 
-  std::cout << "\t[serialize]";
-  serialize();
-  std::cout << "\r✅" << std::endl;
-
-  std::cout << "\t[deserialize]";
-  deserialize();
+  std::cout << "\t[serialize & deserialize]";
+  serialize_and_deserialize();
   std::cout << "\r✅" << std::endl;
 }
 

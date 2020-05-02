@@ -152,15 +152,79 @@ auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
 
 // @TODO
 auto NeuralNetwork::serialize() const -> std::string {
-  return "";
+  std::string ser;
+
+  ser += config_.serialize() + "\n";
+  ser += funcs_.serialize() + "\n";
+
+  ser += input_w_.serialize() + "\n";
+  for (size_t i = 0; i < hidden_w_.size(); i++) {
+    ser += hidden_w_[i].serialize();
+    if (i != hidden_w_.size() - 1) {
+      ser += '|';
+    }
+  }
+  ser += '\n';
+  ser += output_w_.serialize() + "\n";
+
+  for (size_t i = 0; i < hidden_b_.size(); i++) {
+    ser += hidden_b_[i].serialize();
+    if (i != hidden_b_.size() - 1) {
+      ser += '|';
+    }
+  }
+  ser += '\n';
+  ser += output_b_.serialize();
+
+  return ser;
 }
 
 // @TODO
 auto NeuralNetwork::deserialize(const std::string& str) -> NeuralNetwork {
-  str.length();
-  Config config(2, 3, 2, 4, 1.0);
-  NNFunctions funcs(NNFunctions::Activation::sigmoid,
-                    NNFunctions::LastLayer::softmax,
-                    NNFunctions::Cost::mean_square);
-  return {config, funcs};
+  auto split = [](const std::string& str, const char& delim) {
+    std::string buffer;
+    std::vector<std::string> chunks;
+
+    for (auto c : str) {
+      if (c != delim) {
+        buffer += c;
+      } else if (c == delim && buffer != "") {
+        chunks.push_back(buffer);
+        buffer = "";
+      }
+    }
+    if (buffer != "") {
+      chunks.push_back(buffer);
+    }
+
+    return chunks;
+  };
+
+  auto chunks = split(str, '\n');
+  auto config = Config::deserialize(chunks[0]);
+  auto funcs = NNFunctions::deserialize(chunks[1]);
+  NeuralNetwork nn(config, funcs);
+
+  auto apply = [](Matrix& to, Matrix other) {
+    for (size_t i = 0; i < to.rows; i++) {
+      for (size_t j = 0; j < to.columns; j++) {
+        to[i][j] = other[i][j];
+      }
+    }
+  };
+
+  apply(nn.input_w_, Matrix::deserialize(chunks[2]));
+  auto layers = split(chunks[3], '|');
+  for (size_t i = 0; i < layers.size(); i++) {
+    apply(nn.hidden_w_[i], Matrix::deserialize(layers[i]));
+  }
+  apply(nn.output_w_, Matrix::deserialize(chunks[4]));
+
+  auto biases = split(chunks[5], '|');
+  for (size_t i = 0; i < biases.size(); i++) {
+    apply(nn.hidden_b_[i], Matrix::deserialize(biases[i]));
+  }
+  apply(nn.output_b_, Matrix::deserialize(chunks[6]));
+
+  return nn;
 }

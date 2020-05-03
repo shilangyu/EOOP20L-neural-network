@@ -150,7 +150,6 @@ auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
   return goods / static_cast<double>(n);
 }
 
-// @TODO
 auto NeuralNetwork::serialize() const -> std::string {
   std::string ser;
 
@@ -179,7 +178,6 @@ auto NeuralNetwork::serialize() const -> std::string {
   return ser;
 }
 
-// @TODO
 auto NeuralNetwork::deserialize(const std::string& str) -> NeuralNetwork {
   auto split = [](const std::string& str, const char& delim) {
     std::string buffer;

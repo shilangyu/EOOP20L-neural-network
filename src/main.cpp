@@ -14,6 +14,8 @@ const size_t RESOLUTION = 28 * 28;
 struct Digit {
   uint8_t label;
   std::array<uint8_t, RESOLUTION> pixels;
+  Digit(uint8_t label, std::array<uint8_t, RESOLUTION> pixels)
+      : label(label), pixels(pixels) {}
 };
 
 /// loads a csv from a given path and parses the content into Digits
@@ -42,7 +44,7 @@ auto load(std::string path) -> std::vector<Digit> {
         // curr = 0
         // read 2 => curr *= 10 (curr = 0) => curr += 2 (curr = 2)
         // read 1 => curr *= 10 (curr = 20) => curr += 1 (curr = 21)
-        // read 9 => curr *= 10 (curr = 210) => curr += 1 (curr = 219)
+        // read 9 => curr *= 10 (curr = 210) => curr += 9 (curr = 219)
         curr *= 10;
         curr += static_cast<uint8_t>(buff[i] - '0');
       }

@@ -17,12 +17,12 @@ class NeuralNetwork : public Serializer<NeuralNetwork> {
   /// it is not meant for regression problems
   auto classify(const Matrix& inputs) const -> unsigned int;
 
-  /// trains the network `n` amount of times using online training
+  /// trains the network through `n` epochs using online training (SGD)
   /// inputs and expected have to me linearly aligned: first element of inputs
   /// have to correspond to first element from expected and so on
   auto train(const std::vector<Matrix>& inputs,
              const std::vector<Matrix>& expected,
-             unsigned int n) -> void;
+             unsigned int epochs) -> void;
 
   /// tests the network by running all provided samples and returns the
   /// percentage of times the classification was correct

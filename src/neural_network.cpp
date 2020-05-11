@@ -1,4 +1,3 @@
-#include <experimental/random>
 #include <string>
 #include <vector>
 
@@ -130,11 +129,19 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
 
 auto NeuralNetwork::train(const std::vector<Matrix>& inputs,
                           const std::vector<Matrix>& expected,
-                          unsigned int n) -> void {
+                          unsigned int epochs) -> void {
+  size_t n = std::min(inputs.size(), expected.size());
+  std::vector<size_t> order;
+
   for (size_t i = 0; i < n; i++) {
-    int choice =
-        std::experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
-    backpropagate_(inputs[choice], expected[choice]);
+    order.push_back(i);
+  }
+
+  for (size_t i = 0; i < epochs; i++) {
+    std::random_shuffle(order.begin(), order.end());
+    for (size_t j = 0; j < n; j++) {
+      backpropagate_(inputs[order[j]], expected[order[j]]);
+    }
   }
 }
 
@@ -142,7 +149,7 @@ auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
                          const std::vector<unsigned int>& expected) const
     -> double {
   unsigned int goods = 0;
-  unsigned int n = std::min(inputs.size(), expected.size());
+  size_t n = std::min(inputs.size(), expected.size());
 
   for (size_t i = 0; i < n; i++) {
     if (classify(inputs[i]) == expected[i]) {

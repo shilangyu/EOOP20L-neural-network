@@ -22,7 +22,7 @@ auto Matrix::randomize(const double min, const double max) -> void {
 
 auto Matrix::ensure_same_size_(const Matrix& m1,
                                const Matrix& m2,
-                               const std::string op_name) -> void {
+                               const std::string& op_name) -> void {
   if (m1.rows != m2.rows || m1.columns != m2.columns) {
     throw SizeMismatch(m1, m2, op_name);
   }

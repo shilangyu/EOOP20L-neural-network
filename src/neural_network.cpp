@@ -44,8 +44,8 @@ auto NeuralNetwork::feedforward_(const Matrix& inputs) const
   // hidden layer ->> hidden layer
   for (size_t i = 0; i < config_.layers - 1; i++) {
     Matrix curr = dot(hidden_w_[i], nodes[i]) + hidden_b_[i + 1];
-    for (size_t i = 0; i < config_.hidden_neurons; i++) {
-      curr[i][0] = funcs_.activation(curr[i][0]);
+    for (size_t j = 0; j < config_.hidden_neurons; j++) {
+      curr[j][0] = funcs_.activation(curr[j][0]);
     }
     nodes.push_back(curr);
   }
@@ -94,8 +94,8 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
     errors.push_back(dot((i == 0 ? output_w_ : hidden_w_.end()[-i]).transpose(),
                          errors.back()));
     Matrix curr = nodes.end()[-i - 2];
-    for (size_t i = 0; i < curr.rows; i++) {
-      curr[i][0] = funcs_.d_activation(curr[i][0]);
+    for (size_t j = 0; j < curr.rows; j++) {
+      curr[j][0] = funcs_.d_activation(curr[j][0]);
     }
     gradients.push_back(curr * errors.back() * config_.learning_rate);
     deltas.push_back(dot(gradients.back(), nodes.end()[-i - 3].transpose()));

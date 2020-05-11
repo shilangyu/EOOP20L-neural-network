@@ -14,14 +14,11 @@ class Matrix : public Serializer<Matrix> {
   struct SizeMismatch : public std::exception {
     std::string msg;
 
-    SizeMismatch(const Matrix& m1,
-                 const Matrix& m2,
-                 const std::string op_name) {
-      msg = "Cannot perform operation with mismatched sizes: m1(" +
-            std::to_string(m1.rows) + ", " + std::to_string(m1.columns) + ") " +
-            op_name + " m2(" + std::to_string(m2.rows) + ", " +
-            std::to_string(m2.columns) + ")";
-    }
+    SizeMismatch(const Matrix& m1, const Matrix& m2, const std::string& op_name)
+        : msg("Cannot perform operation with mismatched sizes: m1(" +
+              std::to_string(m1.rows) + ", " + std::to_string(m1.columns) +
+              ") " + op_name + " m2(" + std::to_string(m2.rows) + ", " +
+              std::to_string(m2.columns) + ")") {}
 
     const char* what() const throw() { return msg.c_str(); }
   };
@@ -70,5 +67,5 @@ class Matrix : public Serializer<Matrix> {
   /// throws SizeMismatch if rows and columns are different
   static auto ensure_same_size_(const Matrix& m1,
                                 const Matrix& m2,
-                                const std::string op_name) -> void;
+                                const std::string& op_name) -> void;
 };

@@ -123,7 +123,7 @@ int main() {
     const auto& [inputs, expected] =
         mnist::map_to_nn_test(mnist::load("mnist_test.csv"));
     std::cout << "Testing..." << std::endl;
-    double accuracy = nn.test(inputs, expected, 10000);
+    double accuracy = nn.test(inputs, expected);
     std::cout << "Final accuracy: " << accuracy * 100 << "%" << std::endl;
   }
 

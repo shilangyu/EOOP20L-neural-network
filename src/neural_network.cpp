@@ -135,14 +135,13 @@ auto NeuralNetwork::train(const std::vector<Matrix>& inputs,
 }
 
 auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
-                         const std::vector<unsigned int>& expected,
-                         unsigned int n) const -> double {
+                         const std::vector<unsigned int>& expected) const
+    -> double {
   unsigned int goods = 0;
+  unsigned int n = std::min(inputs.size(), expected.size());
 
   for (size_t i = 0; i < n; i++) {
-    int choice =
-        std::experimental::randint(static_cast<size_t>(0), inputs.size() - 1);
-    if (classify(inputs[choice]) == expected[choice]) {
+    if (classify(inputs[i]) == expected[i]) {
       goods += 1;
     }
   }

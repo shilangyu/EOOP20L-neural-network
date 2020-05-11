@@ -68,7 +68,7 @@ auto test() -> void {
     expected.push_back(i);
   }
 
-  nn.test(inputs, expected, 100);
+  nn.test(inputs, expected);
 }
 
 auto serialize_and_deserialize() -> void {
@@ -90,7 +90,7 @@ auto serialize_and_deserialize() -> void {
   out.randomize();
 
   nn.train({in}, {out}, 100);
-  nn.test({in}, {1}, 100);
+  nn.test({in}, {1});
 }
 
 auto init() -> void {

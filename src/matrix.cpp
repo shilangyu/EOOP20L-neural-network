@@ -106,29 +106,13 @@ auto operator-(const Matrix& lhs, const double& rhs) -> Matrix {
 }
 
 auto operator*(const Matrix& lhs, const Matrix& rhs) -> Matrix {
-  // can i do a dot product?
-  if (lhs.columns != rhs.rows) {
-    // can i do an element wise multiplication?
-    Matrix::ensure_same_size_(lhs, rhs, "*");
+  Matrix::ensure_same_size_(lhs, rhs, "*");
 
-    Matrix m(lhs.rows, lhs.columns);
+  Matrix m(lhs.rows, lhs.columns);
 
-    for (size_t i = 0; i < m.rows; i++) {
-      for (size_t j = 0; j < m.columns; j++) {
-        m[i][j] = lhs.data_[i][j] * rhs.data_[i][j];
-      }
-    }
-
-    return m;
-  }
-
-  Matrix m(lhs.rows, rhs.columns);
-
-  for (size_t k = 0; k < m.columns; k++) {
-    for (size_t i = 0; i < m.rows; i++) {
-      for (size_t j = 0; j < lhs.columns; j++) {
-        m[i][k] += (lhs.data_[i][j] * rhs.data_[j][k]);
-      }
+  for (size_t i = 0; i < m.rows; i++) {
+    for (size_t j = 0; j < m.columns; j++) {
+      m[i][j] = lhs.data_[i][j] * rhs.data_[i][j];
     }
   }
 
@@ -147,6 +131,24 @@ auto operator/(const Matrix& lhs, const double& rhs) -> Matrix {
 
 auto Matrix::operator[](size_t idx) -> std::vector<double>& {
   return data_[idx];
+}
+
+auto Matrix::dot(const Matrix& lhs, const Matrix& rhs) -> Matrix {
+  if (lhs.columns != rhs.rows) {
+    throw Matrix::SizeMismatch(lhs, rhs, "dot product");
+  }
+
+  Matrix m(lhs.rows, rhs.columns);
+
+  for (size_t k = 0; k < m.columns; k++) {
+    for (size_t i = 0; i < m.rows; i++) {
+      for (size_t j = 0; j < lhs.columns; j++) {
+        m[i][k] += (lhs.data_[i][j] * rhs.data_[j][k]);
+      }
+    }
+  }
+
+  return m;
 }
 
 auto Matrix::transpose() const -> Matrix {

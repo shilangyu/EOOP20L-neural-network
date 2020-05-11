@@ -187,7 +187,7 @@ auto global_operators() -> void {
     Matrix m2 = get(2);
     m2[1][0] = 3.0;
 
-    Matrix m3 = m1 * m2;
+    Matrix m3 = Matrix::dot(m1, m2);
 
     assert(m3[0][0] == 7.0);
     assert(m3[0][1] == 2.0);
@@ -198,7 +198,7 @@ auto global_operators() -> void {
     Matrix m2 = get(3);
 
     try {
-      Matrix m3 = m1 * m2;
+      Matrix m3 = Matrix::dot(m1, m2);
       assert(false);
     } catch (...) {
     }

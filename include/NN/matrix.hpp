@@ -33,9 +33,7 @@ class Matrix : public Serializer<Matrix> {
   auto randomize(const double min = -1.0, const double max = 1.0) -> void;
 
   /// operator overloads for matrix operations
-  /// if on both sides of the operation theres a matrix then the operation is
-  /// done element wise, unless it is * where a matrix multiplication is
-  /// performed instead
+  /// all operations are element wise or scaled by a scalar
   /// in-place
   auto operator+=(const Matrix& rhs) -> Matrix&;
   auto operator+=(const double& rhs) -> Matrix&;
@@ -53,6 +51,8 @@ class Matrix : public Serializer<Matrix> {
   friend auto operator/(const Matrix& lhs, const double& rhs) -> Matrix;
   /// indexing
   auto operator[](size_t idx) -> std::vector<double>&;
+  /// dot product between 2 matrices
+  static auto dot(const Matrix& lhs, const Matrix& rhs) -> Matrix;
 
   /// transposing flips the x and y axis
   auto transpose() const -> Matrix;

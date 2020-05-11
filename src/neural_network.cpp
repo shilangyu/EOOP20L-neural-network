@@ -31,17 +31,19 @@ NeuralNetwork::NeuralNetwork(Config config, NNFunctions funcs)
 
 auto NeuralNetwork::feedforward_(const Matrix& inputs) const
     -> std::vector<Matrix> {
+  auto dot = Matrix::dot;
+
   std::vector<Matrix> nodes;
 
   // input -> first hidden layer
-  nodes.push_back(input_w_ * inputs + hidden_b_[0]);
+  nodes.push_back(dot(input_w_, inputs) + hidden_b_[0]);
   for (size_t i = 0; i < config_.hidden_neurons; i++) {
     nodes[0][i][0] = funcs_.activation(nodes[0][i][0]);
   }
 
   // hidden layer ->> hidden layer
   for (size_t i = 0; i < config_.layers - 1; i++) {
-    Matrix curr = hidden_w_[i] * nodes[i] + hidden_b_[i + 1];
+    Matrix curr = dot(hidden_w_[i], nodes[i]) + hidden_b_[i + 1];
     for (size_t i = 0; i < config_.hidden_neurons; i++) {
       curr[i][0] = funcs_.activation(curr[i][0]);
     }
@@ -49,7 +51,7 @@ auto NeuralNetwork::feedforward_(const Matrix& inputs) const
   }
 
   // last hidden layer -> output layer
-  Matrix outs = output_w_ * nodes.back() + output_b_;
+  Matrix outs = dot(output_w_, nodes.back()) + output_b_;
   nodes.push_back(funcs_.last_layer(outs));
 
   return nodes;
@@ -71,6 +73,8 @@ auto NeuralNetwork::classify(const Matrix& inputs) const -> unsigned int {
 
 auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
     -> double {
+  auto dot = Matrix::dot;
+
   const std::vector<Matrix> nodes = feedforward_(inputs);
   // error is the difference of expected and actual
   // gradient is the direction of change
@@ -82,32 +86,32 @@ auto NeuralNetwork::backpropagate_(const Matrix& inputs, const Matrix& expected)
   errors.push_back(expected - nodes.back());
   gradients.push_back(funcs_.d_last_layer(nodes.back()) * errors[0] *
                       config_.learning_rate);
-  deltas.push_back(gradients[0] * nodes.end()[-2].transpose());
+  deltas.push_back(dot(gradients[0], nodes.end()[-2].transpose()));
 
   // hidden layer <<- hidden layer
   for (size_t i = 0; i < config_.layers - 1; i++) {
     // use output weights if first iter
-    errors.push_back((i == 0 ? output_w_ : hidden_w_.end()[-i]).transpose() *
-                     errors.back());
+    errors.push_back(dot((i == 0 ? output_w_ : hidden_w_.end()[-i]).transpose(),
+                         errors.back()));
     Matrix curr = nodes.end()[-i - 2];
     for (size_t i = 0; i < curr.rows; i++) {
       curr[i][0] = funcs_.d_activation(curr[i][0]);
     }
     gradients.push_back(curr * errors.back() * config_.learning_rate);
-    deltas.push_back(gradients.back() * nodes.end()[-i - 3].transpose());
+    deltas.push_back(dot(gradients.back(), nodes.end()[-i - 3].transpose()));
   }
 
   // input <- first hidden layer
   // if there are no hidden weights (= there is one layer) use output weights
   errors.push_back(
-      (config_.layers == 1 ? output_w_ : hidden_w_[0]).transpose() *
-      errors.back());
+      dot((config_.layers == 1 ? output_w_ : hidden_w_[0]).transpose(),
+          errors.back()));
   Matrix curr = nodes[0];
   for (size_t i = 0; i < curr.rows; i++) {
     curr[i][0] = funcs_.d_activation(curr[i][0]);
   }
   gradients.push_back(curr * errors.back() * config_.learning_rate);
-  deltas.push_back(gradients.back() * inputs.transpose());
+  deltas.push_back(dot(gradients.back(), inputs.transpose()));
 
   // adjust weights and biases
   output_w_ += deltas[0];

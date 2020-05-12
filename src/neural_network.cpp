@@ -152,7 +152,7 @@ auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
     -> double {
   size_t n = std::min(inputs.size(), expected.size());
   unsigned int n_threads = std::thread::hardware_concurrency();
-  size_t samples_per_thread = n / n_threads;
+  size_t samples_per_thread = std::max(n / n_threads, static_cast<size_t>(1));
 
   std::atomic<uint32_t> goods;
   std::vector<std::thread> handles;

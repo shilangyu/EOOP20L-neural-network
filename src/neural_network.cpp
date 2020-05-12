@@ -1,4 +1,6 @@
+#include <atomic>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "NN/config.hpp"
@@ -148,13 +150,33 @@ auto NeuralNetwork::train(const std::vector<Matrix>& inputs,
 auto NeuralNetwork::test(const std::vector<Matrix>& inputs,
                          const std::vector<unsigned int>& expected) const
     -> double {
-  unsigned int goods = 0;
   size_t n = std::min(inputs.size(), expected.size());
+  unsigned int n_threads = std::thread::hardware_concurrency();
+  size_t samples_per_thread = n / n_threads;
 
-  for (size_t i = 0; i < n; i++) {
-    if (classify(inputs[i]) == expected[i]) {
-      goods += 1;
-    }
+  std::atomic<uint32_t> goods;
+  std::vector<std::thread> handles;
+
+  for (size_t offset = 0; offset < n; offset += samples_per_thread) {
+    // if samples_per_thread got floored i need to make sure I dont overflow `n`
+    size_t up_to = std::min(offset + samples_per_thread, n);
+
+    handles.emplace_back(
+        // this is safe, from and to do not overlap in different threads
+        // all reads to `inputs` and `expected` will never request the same
+        // memory
+        [&](size_t from, size_t to) {
+          for (size_t i = from; i < to; i++) {
+            if (classify(inputs[i]) == expected[i]) {
+              goods += 1;
+            }
+          }
+        },
+        offset, up_to);
+  }
+
+  for (auto& handle : handles) {
+    handle.join();
   }
 
   return goods / static_cast<double>(n);

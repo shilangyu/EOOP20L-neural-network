@@ -21,6 +21,12 @@ jobs:
           sed -i 's/g++/g++-9/g' test.sh 
           ./test.sh
 
+      - name: Run against MNIST
+        run: |
+          ./download-mnist.sh
+          ./compile.sh
+          ./nn
+
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -51,6 +57,7 @@ jobs:
       - name: generate pdfs
         run: |
           mkdir build
+          echo '<ul><li><a href="./prelimiary.md">prelimiary</a></li></ul>' > build/index.html
           cd doc
           pandoc --pdf-engine=xelatex preliminary.md -o ../build/preliminary.pdf
 

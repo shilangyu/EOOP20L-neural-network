@@ -21,13 +21,6 @@ jobs:
           sed -i 's/g++/g++-9/g' test.sh 
           ./test.sh
 
-      - name: Run against MNIST
-        run: |
-          sed -i 's/g++/g++-9/g' compile.sh 
-          ./download-mnist.sh
-          ./compile.sh
-          ./nn
-
   deploy:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'

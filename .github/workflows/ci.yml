@@ -39,6 +39,15 @@ jobs:
           sudo apt-get install texlive-xetex
           sudo apt-get install librsvg2-bin
 
+      - name: install JetBrains Mono
+        run: |
+          name='JetBrainsMono-1.0.3'
+          curl https://download-cf.jetbrains.com/fonts/$name.zip -O
+          sudo apt-get install unzip
+          unzip $name.zip
+          cp $name/ttf/* ~/.local/share/fonts
+          sudo fc-cache -fv
+
       - name: generate pdfs
         run: |
           mkdir build

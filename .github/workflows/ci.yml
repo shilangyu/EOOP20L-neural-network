@@ -43,8 +43,8 @@ jobs:
         run: |
           name='JetBrainsMono-1.0.3'
           curl https://download-cf.jetbrains.com/fonts/$name.zip -O
-          sudo apt-get install unzip
           unzip $name.zip
+          mkdir -p ~/.local/share/fonts
           cp $name/ttf/* ~/.local/share/fonts
           sudo fc-cache -fv
 

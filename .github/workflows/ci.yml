@@ -20,3 +20,33 @@ jobs:
         run: |
           sed -i 's/g++/g++-9/g' test.sh 
           ./test.sh
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: install pandoc
+        run: |
+          sudo apt-get update -qq
+          curl https://github.com/jgm/pandoc/releases/download/2.7.3/pandoc-2.7.3-1-amd64.deb -L --output pandoc.deb
+          sudo apt install ./pandoc.deb
+          sudo apt-get install -y texlive
+
+      - name: generate pdfs
+        run: |
+          mkdir build
+          cd doc
+          pandoc --pdf-engine=xelatex preliminary.md -o ../build/preliminary.pdf
+
+      - name: Deploy pdfs to Github Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_BRANCH: master
+          BRANCH: gh-pages
+          FOLDER: build

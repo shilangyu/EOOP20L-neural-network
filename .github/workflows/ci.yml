@@ -23,6 +23,7 @@ jobs:
 
       - name: Run against MNIST
         run: |
+          sed -i 's/g++/g++-9/g' compile.sh 
           ./download-mnist.sh
           ./compile.sh
           ./nn
@@ -57,7 +58,7 @@ jobs:
       - name: generate pdfs
         run: |
           mkdir build
-          echo '<ul><li><a href="./prelimiary.md">prelimiary</a></li></ul>' > build/index.html
+          echo '<ul><li><a href="./preliminary.pdf">preliminary</a></li></ul>' > build/index.html
           cd doc
           pandoc --pdf-engine=xelatex preliminary.md -o ../build/preliminary.pdf
 

@@ -51,9 +51,10 @@ jobs:
       - name: generate pdfs
         run: |
           mkdir build
-          echo '<ul><li><a href="./preliminary.pdf">preliminary</a></li></ul>' > build/index.html
+          echo '<ul><li><a href="./preliminary.pdf">preliminary</a></li><li><a href="./final.pdf">final</a></li></ul>' > build/index.html
           cd doc
           pandoc --pdf-engine=xelatex preliminary.md -o ../build/preliminary.pdf
+          pandoc --pdf-engine=xelatex final.md -o ../build/final.pdf
 
       - name: Deploy pdfs to Github Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3

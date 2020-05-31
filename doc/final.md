@@ -58,6 +58,13 @@ numbersections: true
 
 # Implementation
 
+- The NN starts by initializing and randomizing its weights/biases in the range of -1..1
+- Feedforward saves individual neuron values
+- Backpropagation calculates the errors, gradients, and deltas. Then it adjusts the weights and biases
+- Classification feedforwards its inputs and returns an integer representing the index of the output neuron with the highest value
+- Train runs for `n` epochs with an online training method on a randomized order training set
+- Test checks how many times the classification was correct and returns the percentage. This is parallelized: each thread runs different test samples and there is an atomic counter which keeps track of the corrected guesses
+
 # Running against MNIST
 
 ![MNIST](https://upload.wikimedia.org/wikipedia/commons/2/27/MnistExamples.png)
@@ -172,4 +179,5 @@ Possible enhancements:
 1. Using SIMD. This would be a perfect occasion to use SIMD since a lot of the vector instructions could be just performed at the same time. (Perhaps `g++` applied some automatic vectorization already?)
 2. Normalizing weights. ReLU is unusable currently
 3. Mini-batches. They are an effective way of training a NN. Would also simplify parallelization
-4. `Matrix` generalizing to any dimension. This would remove the need of a vector of weights, then I could just have a third dimension
+4. Generalizing `Matrix` to any dimension. This would remove the need of a vector of weights, then I could just have a third dimension
+5. Classification based on probability. Currently it just chooses the highest value neuron, since softmax gives a probability distribution classify could use that

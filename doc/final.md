@@ -12,7 +12,6 @@ numbersections: true
 
 ```
 |-- doc
-|   |-- memory_map.drawio
 |   |-- final.md
 |   `-- preliminary.md
 |-- include
@@ -108,6 +107,8 @@ First the training data is loaded (from a pre-downloaded `csv` file) and parsed 
 
 Afterwards the data parsing and preparation is repeated for the testing data. The data is used to test the trained NN and check its accuracy.
 
+After running it for a couple of times, the average accuracy ended up being 92%.
+
 ## Benchmarks
 
 ### Memory
@@ -137,13 +138,34 @@ The project is compiled with `-O3` and then ran. Then simultaneously the memory 
 
 #### Method
 
+Before a function is called `std::chrono::high_resolution_clock::now()` is noted, after the function has finished executing `::now()` is noted once more to check the elapsed time. Therefore these benchmarks check user time, not CPU clock cycles. Each function is tested 20 times after which the averages and standard deviations are calculated.
+
+All tests done on an `Intel i5-4300U (4) @ 2.900GHz` (thought the relative values should not be affected by the kind of CPU).
+
 #### Results
+
+&nbsp;<!-- h4 is inlining its content, this hack prevents that -->
+
+![](time_bench.svg)
+
+1. **training** 76.83%: 22.531s $\pm$ 127ms
+2. **preparing training data** 18.88%: 5.536s $\pm$ 15ms
+3. **preparing testing data** 3.11%: 911ms $\pm$ 7ms
+4. **load/parse training data** 0.66%: 194ms $\pm$ 2ms
+5. **testing** 0.40%: 117ms $\pm$ 10ms
+6. **load/parse testing data** 0.12%: 34ms $\pm$ 0ms
+
+**Total**: 29.324s $\pm$ 143ms
 
 #### Analysis
 
+Unsurprisingly training takes most of the time. Following that is the preparation of data: many Matrices have to be allocated and iterated over. Loading the csv files happens pretty quickly: other than one vector everything is allocated statically. Since testing is parallelized and does not require backpropagation it is fast.
+
+Additionally I notice testing has a relatively higher deviation than other stages; this is likely due to the parallelization resulting in some random fights for the lock.
+
 # Ending reflections
 
-I consider this project to be a success and I believe it had greatly broadened my C++ knowledge.
+I consider this project to be a success and I believe it had greatly broadened my C++ and NN knowledge.
 
 Possible enhancements:
 

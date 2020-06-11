@@ -84,7 +84,7 @@ auto map_to_nn_train(const std::vector<Digit>& digits)
     expected[i][digits[i].label][0] = 1.0;
   }
 
-  return std::tuple(inputs, expected);
+  return std::tuple(std::move(inputs), std::move(expected));
 }
 
 /// maps digits to a tuple of inputs and expected classifications
@@ -99,7 +99,7 @@ auto map_to_nn_test(const std::vector<Digit>& digits)
     expected.push_back(static_cast<unsigned int>(d.label));
   }
 
-  return std::tuple(inputs, expected);
+  return std::tuple(std::move(inputs), std::move(expected));
 }
 }  // namespace mnist
 

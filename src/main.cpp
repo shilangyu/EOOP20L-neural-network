@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "NN/bench.hpp"
 #include "NN/config.hpp"
 #include "NN/functions.hpp"
 #include "NN/matrix.hpp"
@@ -108,23 +109,45 @@ int main() {
                     NNFunctions::LastLayer::softmax,
                     NNFunctions::Cost::mean_square);
   NeuralNetwork nn(config, funcs);
+  bench::UsrTime t;
+
+  auto time = [&]() {
+#ifdef BENCH_USR_TIME
+    std::cout << t.elapsed() << std::endl;
+    t.reset();
+#endif
+  };
+
+  auto runtime_print = [&](std::string s) {
+#ifndef BENCH_USR_TIME
+    std::cout << s << std::endl;
+#endif
+  };
 
   {
-    std::cout << "Loading training data..." << std::endl;
-    const auto& [inputs, expected] =
-        mnist::map_to_nn_train(mnist::load("mnist_train.csv"));
-    std::cout << "Training..." << std::endl;
+    runtime_print("Loading training data...");
+    t.reset();
+    auto loaded = mnist::load("mnist_train.csv");
+    time();
+    const auto& [inputs, expected] = mnist::map_to_nn_train(loaded);
+    time();
+    runtime_print("Training...");
     nn.train(inputs, expected, 5);
+    time();
     nn.to_file("brain.txt");
   }
 
   {
-    std::cout << "Loading testing data..." << std::endl;
-    const auto& [inputs, expected] =
-        mnist::map_to_nn_test(mnist::load("mnist_test.csv"));
-    std::cout << "Testing..." << std::endl;
+    runtime_print("Loading testing data...");
+    t.reset();
+    auto loaded = mnist::load("mnist_test.csv");
+    time();
+    const auto& [inputs, expected] = mnist::map_to_nn_test(loaded);
+    time();
+    runtime_print("Testing...");
     double accuracy = nn.test(inputs, expected);
-    std::cout << "Final accuracy: " << accuracy * 100 << "%" << std::endl;
+    time();
+    runtime_print("Final accuracy: " + std::to_string(accuracy * 100) + "%");
   }
 
   return 0;

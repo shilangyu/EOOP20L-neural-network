@@ -4,9 +4,10 @@
 
 For a description of the project see [this](doc/preliminary.md) (some info is outdated because there has been changes in the source code since)
 
-- run in debug mode with `run.sh`
-- run unit tests with `test.sh`
-- compile in release mode with `compile.sh`
+- run in debug mode with `./scripts/run.sh`
+- run unit tests with `./scripts/test.sh`
+- compile in release mode with `./scripts/compile.sh`
+- download mnist database with `./scripts/download-mnist.sh`
 
 ## run against MNIST
 

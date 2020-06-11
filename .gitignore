@@ -3,3 +3,4 @@ nn
 mnist_*.csv
 brain.txt
 bench-usr-time-results.csv
+bench-mem-results.csv

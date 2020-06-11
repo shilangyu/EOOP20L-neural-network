@@ -2,7 +2,7 @@
 
 find src/ -name '*.cpp' | xargs g++ -D BENCH_USR_TIME -O3 -std=c++2a -I"./include" -pthread -o nn-bench-usr-time
 
-echo 'load_train,parse_train,train,load_test,parse_test,test' > bench-usr-time-results.csv
+echo 'load_train[s],parse_train[s],train[s],load_test[s],parse_test[s],test[s]' > bench-usr-time-results.csv
 
 for i in {1..20}
 do

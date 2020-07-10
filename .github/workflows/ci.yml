@@ -18,8 +18,8 @@ jobs:
 
       - name: Tests
         run: |
-          sed -i 's/g++/g++-9/g' test.sh 
-          ./test.sh
+          sed -i 's/g++/g++-9/g' ./scripts/test.sh 
+          ./scripts/test.sh
 
   deploy:
     runs-on: ubuntu-latest
